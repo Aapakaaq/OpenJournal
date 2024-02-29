@@ -1,0 +1,11 @@
+.container {
+    margin-top: 50px;
+}
+.submit-button {
+    width: 100%;
+    border-radius: 5px;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 25px;
+    color: #4d4d5a;
+}
