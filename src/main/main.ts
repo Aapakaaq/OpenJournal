@@ -112,6 +112,10 @@ const createWindow = async () => {
   new AppUpdater();
 };
 
+// connection.send("CONNECTION_REQUEST", "PracticalJournal", (response: any) => {
+//   console.log(response);
+//   connection.close();
+// })
 /**
  * Add event listeners...
  */

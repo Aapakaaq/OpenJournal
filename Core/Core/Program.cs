@@ -11,6 +11,11 @@ namespace Core
   {
     static void Main(string[] args)
     {
+      #if !DEBUG
+        Console.SetOut(TextWriter.Null);
+        Console.SetError(TextWriter.Null);
+      #endif
+
       Startup startup = new Startup();
       IServiceProvider serviceProvider = startup.CreateServiceProvider();
       //IJournalService? journalService = serviceProvider.GetService<IJournalService>();
