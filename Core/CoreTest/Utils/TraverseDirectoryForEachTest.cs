@@ -19,7 +19,6 @@ namespace CoreTest.Utils
     public void Setup()
     {
       _tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-      Console.WriteLine(_tempDirectory);
       Directory.CreateDirectory(_tempDirectory);
 
       _fileSystem = new FileSystemDataAccess();

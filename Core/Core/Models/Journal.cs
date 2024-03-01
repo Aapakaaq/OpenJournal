@@ -7,5 +7,8 @@ public record Journal
 {
   public string Path { get; init; }
 
-  [JsonExtensionData] public IDictionary<string, JToken> Fields { get; init; }
+  public Dictionary<string, string> MetaData { get; init; }
+
+  [JsonExtensionData]
+  public IDictionary<string, JToken> Fields { get; init; }
 }
