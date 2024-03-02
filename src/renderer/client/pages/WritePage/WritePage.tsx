@@ -3,7 +3,7 @@ import JournalInput from "../../components/JournalInput/JournalInput";
 import { SubmitJournal } from "../../components/SubmitJournal/SubmitJournal";
 
 import './WritePage.css'
-import { IJournal } from "../../types/Journal";
+import { IJournal } from "../../../Shared/types/Journal";
 
 export default function WritePage(){
     const [journal, setJournal] = useState<IJournal>();

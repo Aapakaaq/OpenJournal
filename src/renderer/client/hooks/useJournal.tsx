@@ -1,6 +1,6 @@
 import { useCallback, useRef } from "react";
-import { IJournal } from "../types/Journal";
-import { JournalComponentEntity, JournalComponent } from "../types/JournalComponent";
+import { IJournal } from "../../Shared/types/Journal";
+import { JournalComponentType, JournalComponent } from "../../Shared/types/JournalComponent";
 import { SetWithContentEquality } from "../utils/SetWithContentEquality";
 import { useCache } from "./useCache";
 
@@ -8,7 +8,7 @@ import { useCache } from "./useCache";
 
 const initialState: IJournal = {
     id: 0,
-    componentSet: new SetWithContentEquality<JournalComponentEntity, JournalComponent>
+    componentSet: new SetWithContentEquality<JournalComponentType, JournalComponent>
         (component => component.type),
 }
 

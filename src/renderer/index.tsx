@@ -1,10 +1,10 @@
 import { createRoot } from 'react-dom/client';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
-import ReviewPage from './pages/ReviewPage';
-import NotFoundPage from './pages/NotFoundPage';
-import Root from './routes/Root'
-import SettingsPage from './pages/Settings';
-import WritePage from './pages/WritePage/WritePage';
+import ReviewPage from './client/pages/ReviewPage';
+import NotFoundPage from './client/pages/NotFoundPage';
+import Root from './client/routes/Root'
+import SettingsPage from './client/pages/Settings';
+import WritePage from './client/pages/WritePage/WritePage';
 const container = document.getElementById('root') as HTMLElement;
 const root = createRoot(container);
 

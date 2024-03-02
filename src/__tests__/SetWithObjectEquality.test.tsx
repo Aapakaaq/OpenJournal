@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { DuplicateKeyError} from '../renderer/errors/DuplicateKeyError'
-import { SetWithContentEquality } from '../renderer/utils/SetWithContentEquality'
+import { SetWithContentEquality } from '../renderer/client/utils/SetWithContentEquality'
 
 describe('SetWithContentEquality', () => {
     // Setup

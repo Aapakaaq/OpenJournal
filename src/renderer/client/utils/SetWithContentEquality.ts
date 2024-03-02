@@ -1,4 +1,4 @@
-import {DuplicateKeyError} from '../errors/DuplicateKeyError'
+import {DuplicateKeyError} from '../../errors/DuplicateKeyError'
 
 /*
  * Set data structure with content equality

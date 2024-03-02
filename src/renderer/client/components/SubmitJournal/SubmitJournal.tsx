@@ -1,4 +1,4 @@
-import { IJournal } from "../../types/Journal";
+import { IJournal } from "../../../Shared/types/Journal";
 
 import './SubmitJournal.css'
 

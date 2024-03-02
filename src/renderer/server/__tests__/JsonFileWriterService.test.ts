@@ -2,9 +2,9 @@ import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 
-import {serviceCollection} from "../renderer/inversify.config";
-import { IFileWriter } from '../renderer/services/IFileWriter';
-import {TYPES} from "../renderer/types/types";
+import {serviceCollection} from "../../inversify.config";
+import { IFileWriter } from '../services/IFileWriter';
+import {TYPES} from "../../Shared/types/types";
 
 describe('[SYSTEM_TEST] JsonFileWriterService - writeFile', () => {
   let sut: IFileWriter;

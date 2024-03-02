@@ -1,7 +1,7 @@
 import {IFileWriter} from "./IFileWriter";
 import {IFileSystemDataAccess} from "../dataAccess/IFileSystemDataAccess";
 import {inject, injectable } from "inversify";
-import {TYPES} from "../types/types";
+import {TYPES} from "../../Shared/types/types";
 
 // TODO: How to handle already existing files?
 @injectable()

@@ -1,7 +1,7 @@
 
 import { ReactNode, createContext, useState } from 'react';
-import { IJournal, JournalContextType } from '../types/Journal'
-import { JournalComponent, JournalComponentEntity } from '../types/JournalComponent';
+import { IJournal, JournalContextType } from '../../Shared/types/Journal'
+import { JournalComponent, JournalComponentType } from '../../Shared/types/JournalComponent';
 import { SetWithContentEquality } from '../utils/SetWithContentEquality';
 
 interface IProps {
@@ -10,7 +10,7 @@ interface IProps {
 
 const initialState: IJournal = {
     id: 0,
-    componentSet: new SetWithContentEquality<JournalComponentEntity, JournalComponent>
+    componentSet: new SetWithContentEquality<JournalComponentType, JournalComponent>
         (component => component.type),
 }
 
@@ -26,7 +26,7 @@ export function JournalProvider({children}: IProps ){
             const instance: TComponent = new component(...args);
 
             const newComponentsSet = new
-                SetWithContentEquality<JournalComponentEntity, JournalComponent>(
+                SetWithContentEquality<JournalComponentType, JournalComponent>(
                     component => component.type,
                     journal.componentSet.values()
 
@@ -42,7 +42,7 @@ export function JournalProvider({children}: IProps ){
     };
 
     function getComponent<TComponent extends JournalComponent>
-        (componentType: JournalComponentEntity): TComponent | undefined {
+        (componentType: JournalComponentType): TComponent | undefined {
         return journal.componentSet.getValueByKey(componentType) as TComponent | undefined;
     }
 

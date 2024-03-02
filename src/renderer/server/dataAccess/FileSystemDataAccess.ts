@@ -14,7 +14,7 @@ export class FileSystemDataAccess implements IFileSystemDataAccess{
         throw new Error(`No file found in path ${filePath}`);
       }
 
-      return await fs.promises.readFile(filePath, 'utf-8'); // Return file content as a string
+      return await fs.promises.readFile(filePath, 'utf-8');
     } catch (error) {
       throw new Error (`Error reading file ${error}`);
     }
