@@ -4,7 +4,7 @@ import * as path from 'path';
 
 import {serviceCollection} from "../../inversify.config";
 import { IFileWriter } from '../services/IFileWriter';
-import {TYPES} from "../../Shared/types/types";
+import {ServiceTypes} from "../ServiceTypes";
 
 describe('[SYSTEM_TEST] JsonFileWriterService - writeFile', () => {
   let sut: IFileWriter;
@@ -15,7 +15,7 @@ describe('[SYSTEM_TEST] JsonFileWriterService - writeFile', () => {
   beforeAll(() => {
     const tempDir: string = fs.mkdtempSync(path.join(os.tmpdir(), 'test-'));
     tempDirPath = `${tempDir}/`;
-    sut = serviceCollection.get<IFileWriter>(TYPES.IFileWriter);
+    sut = serviceCollection.get<IFileWriter>(ServiceTypes.IFileWriter);
   });
 
   afterAll(() => {

@@ -3,7 +3,7 @@ import * as os from 'os';
 import * as path from 'path';
 
 import { serviceCollection } from "../../inversify.config";
-import { TYPES } from "../../Shared/types/types";
+import { ServiceTypes } from "../ServiceTypes";
 import { JSONObject } from '../../Shared/types/Json';
 
 describe('SYSTEM_TEST JsonFileReaderService', () => {
@@ -15,18 +15,18 @@ describe('SYSTEM_TEST JsonFileReaderService', () => {
   ];
 
   beforeAll(() => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'test-'));
+    const tempDir: string = fs.mkdtempSync(path.join(os.tmpdir(), 'test-'));
     tempDirPath = `${tempDir}/`;
     console.log(tempDirPath)
     TEST_FILES.forEach(({ fileName, content }) => {
       fs.writeFileSync(path.join(tempDir, fileName), JSON.stringify(content));
     });
 
-    sut = serviceCollection.get<IFileReader<JSONObject>>(TYPES.IFileReader);
+    sut = serviceCollection.get<IFileReader<JSONObject>>(ServiceTypes.IFileReader);
   });
 
   afterAll(() => {
-    //fs.rmSync(tempDirPath, { recursive: true, force: true });
+    fs.rmSync(tempDirPath, { recursive: true, force: true });
   });
 
   it('should read JSON files from directory', async () => {
@@ -35,7 +35,7 @@ describe('SYSTEM_TEST JsonFileReaderService', () => {
 
     // Act
     const filesContent: JSONObject[] = await sut.readFilesFromDirectoryAsync(tempDirPath);
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'test-'));
+    const tempDir: string = fs.mkdtempSync(path.join(os.tmpdir(), 'test-'));
     fs.writeFileSync(path.join(tempDir, "aaaa"), JSON.stringify(filesContent[0]));
     console.log(filesContent)
     // Assert
@@ -47,7 +47,7 @@ describe('SYSTEM_TEST JsonFileReaderService', () => {
 
   it('should throw error if directory does not exist', async () => {
     // Arrange
-    const nonExistentDir = path.join(tempDirPath, 'nonexistent');
+    const nonExistentDir: string = path.join(tempDirPath, 'nonexistent');
 
     // Act & Assert
     await expect(sut.readFilesFromDirectoryAsync(nonExistentDir)).rejects.toThrowError();
