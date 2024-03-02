@@ -1,28 +1,30 @@
 import {IFileWriter} from "./IFileWriter";
 import {IFileSystemDataAccess} from "../dataAccess/IFileSystemDataAccess";
+import {inject, injectable } from "inversify";
+import {TYPES} from "../types/types";
 
-export class JsonFileWriterService  {
+// TODO: How to handle already existing files?
+@injectable()
+export class JsonFileWriterService implements  IFileWriter {
     private fileSystemDataAccess : IFileSystemDataAccess;
-    constructor(fileSystemDataAccess: IFileSystemDataAccess) {
+    constructor(
+      @inject(TYPES.IFileSystemDataAccess) fileSystemDataAccess: IFileSystemDataAccess) {
       this.fileSystemDataAccess = fileSystemDataAccess;
     }
-    public writeFile(path: string, content: string): void {
+    public async writeFile(path: string, content: string): Promise<boolean> {
       const allowRelativePath: boolean = true;
       if (!this.fileSystemDataAccess.isValidPath(path, allowRelativePath)){
         throw new Error(`Invalid path ${path}`);
       }
 
-      if (!this.fileSystemDataAccess.doesDirectoryExist(path)){
-        throw new Error(`Directory does not exists ${path}`);
-      }
-
       const space: number = 2;
       const replacer = null;
-      const jsonContent = JSON.stringify(content,  replacer, space);
+      const jsonObject = JSON.parse(content);
+      const formattedJsonString: string = JSON.stringify(jsonObject,  replacer, space);
 
-      //this.fileSystemDataAccess.writeFileAsync(path, jsonContent, { encoding: 'utf8', flag: 'w' } ,this.writeFileCallback)
-
-
+      const hasWritten: boolean = await this.fileSystemDataAccess.writeFileAsync(path, formattedJsonString,
+        { encoding: 'utf8', flag: 'w' });
+      return hasWritten;
     }
 
   writeFileCallback(err: NodeJS.ErrnoException | null): void {

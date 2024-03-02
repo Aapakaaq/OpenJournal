@@ -66,9 +66,11 @@
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.8",
     "electron-updater": "^6.1.4",
+    "inversify": "^6.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.1"
+    "react-router-dom": "^6.22.1",
+    "reflect-metadata": "^0.2.1"
   },
   "devDependencies": {
     "@electron/notarize": "^2.1.0",

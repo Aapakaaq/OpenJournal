@@ -1,9 +1,13 @@
+import {inject, injectable } from "inversify";
 import {IFileSystemDataAccess} from "../dataAccess/IFileSystemDataAccess";
+import {TYPES} from "../types/types";
 
+@injectable()
 export class JsonFileReaderService implements IFileReader<string>{
   private fileSystemDataAccess: IFileSystemDataAccess;
 
-  constructor(fileSystemDataAccess: IFileSystemDataAccess) {
+  constructor(
+    @inject(TYPES.IFileSystemDataAccess) fileSystemDataAccess: IFileSystemDataAccess) {
     this.fileSystemDataAccess = fileSystemDataAccess;
   }
   public async readFilesFromDirectoryAsync(path: string): Promise<string[]> {

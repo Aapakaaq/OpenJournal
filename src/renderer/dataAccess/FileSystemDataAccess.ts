@@ -1,12 +1,19 @@
 import {IFileSystemDataAccess} from './IFileSystemDataAccess';
 import * as fs from 'fs';
+import { injectable } from 'inversify';
 import * as path from 'path';
 
 
+@injectable()
 export class FileSystemDataAccess implements IFileSystemDataAccess{
     public async readFileAsync(filePath: string): Promise<string> {
     try {
       filePath = path.resolve(filePath);
+
+      if(!fs.existsSync(filePath)) {
+        throw new Error(`No file found in path ${filePath}`);
+      }
+
       return await fs.promises.readFile(filePath, 'utf-8'); // Return file content as a string
     } catch (error) {
       throw new Error (`Error reading file ${error}`);
@@ -17,13 +24,13 @@ export class FileSystemDataAccess implements IFileSystemDataAccess{
       return path.extname(fileName);
   }
 
+  // TODO: Needs rework
   public async writeFileAsync(filePath: string, content: string, options: fs.WriteFileOptions): Promise<boolean> {
     try {
       await fs.promises.writeFile(filePath, content, options);
       return true;
     } catch (error) {
-      console.error('Error writing file:', error);
-      return false;
+      throw error;
     }
   }
   public isValidPath(pathToValidate: string, allowRelativePath: boolean): boolean {
@@ -36,7 +43,9 @@ export class FileSystemDataAccess implements IFileSystemDataAccess{
       return path.isAbsolute(pathToValidate);
     }
 
-    return fs.existsSync(pathToValidate);
+    return path.basename((pathToValidate)) !== undefined;
+
+
   }
 
   public doesDirectoryExist(path: string): boolean {
