@@ -61,7 +61,7 @@ export default class MenuBuilder {
           selector: 'orderFrontStandardAboutPanel:',
         },
         { type: 'separator' },
-        { label: 'Services', submenu: [] },
+        { label: 'services', submenu: [] },
         { type: 'separator' },
         {
           label: 'Hide ElectronReact',

@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
-import { DuplicateKeyError} from './../renderer/Errors/DuplicateKeyError'
-import { SetWithContentEquality } from './../renderer/utils/SetWithContentEquality'
+import { DuplicateKeyError} from '../renderer/errors/DuplicateKeyError'
+import { SetWithContentEquality } from '../renderer/utils/SetWithContentEquality'
 
 describe('SetWithContentEquality', () => {
     // Setup
@@ -9,9 +9,9 @@ describe('SetWithContentEquality', () => {
         age: number,
     }
 
-    let fakeSet: SetWithContentEquality<FakePerson, string>;
+    let fakeSet: SetWithContentEquality<string, FakePerson>;
     beforeEach(() => {
-        fakeSet = new SetWithContentEquality<FakePerson, string>(person => person.name);
+        fakeSet = new SetWithContentEquality<string, FakePerson>(person => person.name);
     })
 
     it('should add items correctly', () => {
@@ -58,7 +58,7 @@ describe('SetWithContentEquality', () => {
         // Arrange
         const fakeFakePersonA: FakePerson = {name: 'Mario', age: 1};
         const key: string = 'Not Mario';
-        const expectedResult: boolean = true;
+        const expectedResult: boolean = false;
         fakeSet.add(fakeFakePersonA);
 
         // Act
