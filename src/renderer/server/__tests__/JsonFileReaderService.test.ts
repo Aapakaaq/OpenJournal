@@ -17,7 +17,6 @@ describe('SYSTEM_TEST JsonFileReaderService', () => {
   beforeAll(() => {
     const tempDir: string = fs.mkdtempSync(path.join(os.tmpdir(), 'test-'));
     tempDirPath = `${tempDir}/`;
-    console.log(tempDirPath)
     TEST_FILES.forEach(({ fileName, content }) => {
       fs.writeFileSync(path.join(tempDir, fileName), JSON.stringify(content));
     });
@@ -35,9 +34,7 @@ describe('SYSTEM_TEST JsonFileReaderService', () => {
 
     // Act
     const filesContent: JSONObject[] = await sut.readFilesFromDirectoryAsync(tempDirPath);
-    const tempDir: string = fs.mkdtempSync(path.join(os.tmpdir(), 'test-'));
-    fs.writeFileSync(path.join(tempDir, "aaaa"), JSON.stringify(filesContent[0]));
-    console.log(filesContent)
+
     // Assert
     expect(filesContent).toHaveLength(expectedLength);
     TEST_FILES.forEach(({ content }) => {

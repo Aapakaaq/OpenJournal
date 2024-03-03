@@ -1,27 +1,43 @@
 import { JournalModel } from "../models/JournalModel";
 import {IJournalService} from "./IJournalService";
 import {IFileWriter} from "./IFileWriter";
-import {TYPES} from "../../Shared/types/types";
-import { inject } from "inversify";
-import {JSONObject} from "../../Shared/types/Json";
+import {ServiceTypes} from "../ServiceTypes";
+import { inject, injectable } from "inversify";
+import {JSONObject, JSONValue} from "../../Shared/types/Json";
 
+@injectable()
 export class JournalService implements IJournalService {
   private fileWriter: IFileWriter;
   private fileReader: IFileReader<JSONObject>
 
   constructor(
-    @inject(TYPES.IFileWriter) fileWriter: IFileWriter,
-    @inject(TYPES.IFileReader) fileReader: IFileReader<JSONObject>) {
+    @inject(ServiceTypes.IFileWriter) fileWriter: IFileWriter,
+    @inject(ServiceTypes.IFileReader) fileReader: IFileReader<JSONObject>) {
     this.fileWriter = fileWriter;
     this.fileReader = fileReader;
   }
 
-  saveJournalJONString(jsonString: string): JournalModel {
+  public async saveJournalJONString(jsonString: string): Promise<boolean> {
+    if (!jsonString || jsonString.trim() === '') {
+      throw new Error('JSON string is null or empty');
+    }
 
-      throw new Error("Method not implemented.");
+    // TODO: Need to validate json
+    const {filePath, metaData, components } = JSON.parse(jsonString) as JournalModel;
+    if (!filePath || filePath.trim() === ""){
+      throw new Error('Missing path in journal');
+    }
+
+    const dataToSave = { metaData, components};
+    const stringyfiedData = JSON.stringify(dataToSave);
+    const isWritten = await this.fileWriter.writeFile(filePath, stringyfiedData);
+
+    // TODO: Better error handling and return
+    return isWritten;
   }
-  getAllJournalsFromDirectory(pathToDirectory: string): JournalModel[] {
+  getAllJournalsFromDirectory(pathToDirectory: string): Promise<JournalModel[]> {
         throw new Error("Method not implemented.");
     }
+
 
 }

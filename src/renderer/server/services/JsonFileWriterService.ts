@@ -1,14 +1,14 @@
 import {IFileWriter} from "./IFileWriter";
 import {IFileSystemDataAccess} from "../dataAccess/IFileSystemDataAccess";
 import {inject, injectable } from "inversify";
-import {TYPES} from "../../Shared/types/types";
+import {ServiceTypes} from "../ServiceTypes";
 
 // TODO: How to handle already existing files?
 @injectable()
 export class JsonFileWriterService implements  IFileWriter {
     private fileSystemDataAccess : IFileSystemDataAccess;
     constructor(
-      @inject(TYPES.IFileSystemDataAccess) fileSystemDataAccess: IFileSystemDataAccess) {
+      @inject(ServiceTypes.IFileSystemDataAccess) fileSystemDataAccess: IFileSystemDataAccess) {
       this.fileSystemDataAccess = fileSystemDataAccess;
     }
     public async writeFile(path: string, content: string): Promise<boolean> {

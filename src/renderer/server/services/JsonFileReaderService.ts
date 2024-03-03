@@ -1,6 +1,6 @@
 import {inject, injectable } from "inversify";
 import {IFileSystemDataAccess} from "../dataAccess/IFileSystemDataAccess";
-import {TYPES} from "../../Shared/types/types";
+import {ServiceTypes} from "../ServiceTypes";
 import {JSONObject, JSONValue} from "../../Shared/types/Json";
 
 @injectable()
@@ -8,7 +8,7 @@ export class JsonFileReaderService implements IFileReader<JSONObject>{
   private fileSystemDataAccess: IFileSystemDataAccess;
 
   constructor(
-    @inject(TYPES.IFileSystemDataAccess) fileSystemDataAccess: IFileSystemDataAccess) {
+    @inject(ServiceTypes.IFileSystemDataAccess) fileSystemDataAccess: IFileSystemDataAccess) {
     this.fileSystemDataAccess = fileSystemDataAccess;
   }
   public async readFilesFromDirectoryAsync(path: string): Promise<JSONObject[]> {
