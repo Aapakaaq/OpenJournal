@@ -104,4 +104,46 @@ describe('INTEGRATION_TEST JournalService', () => {
     // Assert
     expect(actualResult).toEqual(expectedResults);
   })
+
+  it('should read all json files from directory', async () => {
+    // Arrange
+    const fakeDirectoryPath: string ='/path/to/';
+
+    const expectedFilePath1: string = '/path/to/file';
+    const expectedMetaData1: Map<string, JSONObject> = new Map<string, JSONObject>([
+      ['foo', { value: 'metaDataValue1' }],
+      ['bar', { value: 'metaDataValue2' }]
+    ]);
+    const expectedComponents1 = new Map<JournalComponentType, JSONObject>([
+      ['ACTION_COMPONENT', { value: 'mario' }],
+      ['INPUT_COMPONENT', { value: 'luigi' }]
+    ]);
+
+    const expectedJournal1: JournalModel = {
+      filePath: expectedFilePath1,
+      metaData: expectedMetaData1,
+      components: expectedComponents1
+    };
+    const expectedFilePath2: string = '/path/to/file2';
+    const expectedMetaData2: Map<string, JSONObject> = new Map<string, JSONObject>([
+      ['foo', {value: 'metaDataValue1'}]
+    ]);
+    const expectedComponents2 = new Map<JournalComponentType, JSONObject>([
+      ['ACTION_COMPONENT', { value: 'peach' }],
+    ])
+    const expectedJournal2: JournalModel = {
+      filePath: expectedFilePath2,
+      metaData: expectedMetaData2,
+      components: expectedComponents2
+    }
+
+    const expectedResults: JournalModel[] = [expectedJournal1, expectedJournal2];
+
+    // Act
+    const actualResults: JournalModel[] = await sut.getAllJournalsFromDirectory(fakeDirectoryPath);
+
+    // Assert
+    expect(actualResults).toEqual(expectedResults);
+
+  })
 });
