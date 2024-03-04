@@ -1,29 +1,33 @@
-
-import { ReactNode, createContext, useState } from 'react';
-import { IJournal, JournalContextType } from '../../Shared/types/JournalEntry'
-import { JournalComponent, JournalComponentType } from '../../Shared/types/JournalComponent';
-import { SetWithContentEquality } from '../utils/SetWithContentEquality';
+import {createContext, ReactNode, useState} from 'react';
+import {JournalContextType} from '../../Shared/types/JournalEntry'
+import {JournalComponent, JournalComponentType} from '../../Shared/types/JournalComponent';
+import {JSONObject} from "../../Shared/types/Json";
+import {JournalModel} from "../../Shared/models/JournalModel";
 
 interface IProps {
   children: ReactNode;
 }
 
-const initialState: IJournal = {
-    id: 0,
-    componentSet: new SetWithContentEquality<JournalComponentType, JournalComponent>
-        (component => component.type),
+const initialState: JournalModel = {
+  filePath: '',
+  metaData: new Map<string, JSONObject>(),
+  components: new Map<JournalComponentType, JournalComponent>(),
 }
 
 export const JournalContext = createContext<JournalContextType | null>(null)
 
-export function JournalProvider({children}: IProps ){
-    const [journal, setJournal] = useState(initialState);
+export function JournalProvider({children}: IProps) {
+  const [journal, setJournal] = useState(initialState);
 
-    function getJournal(): IJournal {return journal}
+  function getJournal(): JournalModel {
+    return journal
+  }
 
+  /*
     function addComponent<TComponent extends JournalComponent, TArgs extends any[]>
         (component: new (...args: TArgs) => TComponent, ...args: TArgs): void{
             const instance: TComponent = new component(...args);
+
 
             const newComponentsSet = new
                 SetWithContentEquality<JournalComponentType, JournalComponent>(
@@ -35,7 +39,7 @@ export function JournalProvider({children}: IProps ){
             newComponentsSet.add(instance);
 
             setJournal((prevJournal: IJournal) => ({
-                id: prevJournal.id,
+                metaData: prevJournal.metaData,
                 componentSet: newComponentsSet
 
             }));
@@ -46,10 +50,10 @@ export function JournalProvider({children}: IProps ){
         return journal.componentSet.getValueByKey(componentType) as TComponent | undefined;
     }
 
-
-    return(
-        <JournalContext.Provider value={{getJournal, addComponent, getComponent }}>
-            {children}
-        </JournalContext.Provider>
-    )
+*/
+  return (
+    <JournalContext.Provider value={{getJournal}}>
+      {children}
+    </JournalContext.Provider>
+  )
 }

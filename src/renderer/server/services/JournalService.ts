@@ -1,10 +1,9 @@
-import {JournalModel, JournalMapToModel} from "../../Shared/models/JournalModel";
+import {JournalMapToModel, JournalModel} from "../../Shared/models/JournalModel";
 import {IJournalService} from "./IJournalService";
 import {IFileWriter} from "./IFileWriter";
 import {ServiceTypes} from "../ServiceTypes";
-import { inject, injectable } from "inversify";
-import {JSONObject, JSONValue} from "../../Shared/types/Json";
-import {JournalComponentType} from "../../Shared/types/JournalComponent";
+import {inject, injectable} from "inversify";
+import {JSONObject} from "../../Shared/types/Json";
 
 @injectable()
 export class JournalService implements IJournalService {
@@ -19,23 +18,25 @@ export class JournalService implements IJournalService {
   }
 
   public async saveJournalJONString(jsonString: string): Promise<boolean> {
+    console.log(`From saveJournalJSONstring: ${jsonString}`);
     if (!jsonString || jsonString.trim() === '') {
       throw new Error('JSON string is null or empty');
     }
 
     // TODO: Need to validate json
-    const {filePath, metaData, components } = JSON.parse(jsonString) as JournalModel;
-    if (!filePath || filePath.trim() === ""){
+    const {filePath, metaData, components} = JSON.parse(jsonString) as JournalModel;
+    if (!filePath || filePath.trim() === "") {
       throw new Error('Missing path in journal');
     }
 
-    const dataToSave = { metaData, components};
+    const dataToSave = {metaData, components};
     const stringyfiedData: string = JSON.stringify(dataToSave);
     const isWritten: boolean = await this.fileWriter.writeFile(filePath, stringyfiedData);
 
     // TODO: Better error handling and return
     return isWritten;
   }
+
   public async getAllJournalsFromDirectory(pathToDirectory: string): Promise<JournalModel[]> {
     if (!pathToDirectory || pathToDirectory.trim() === '') {
       throw new Error('JSON string is null or empty');
@@ -45,5 +46,5 @@ export class JournalService implements IJournalService {
     const journalModels: JournalModel[] = fileContents.map(content => JournalMapToModel(content))
 
     return journalModels;
-    }
+  }
 }

@@ -1,4 +1,3 @@
-import {ReadFileCallback} from "../../Shared/types/ReadFileCallback";
 import * as fs from 'fs';
 
 // For improving testability

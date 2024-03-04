@@ -1,27 +1,27 @@
 import {IFileSystemDataAccess} from './IFileSystemDataAccess';
 import * as fs from 'fs';
-import { injectable } from 'inversify';
+import {injectable} from 'inversify';
 import * as path from 'path';
 
 
 @injectable()
-export class FileSystemDataAccess implements IFileSystemDataAccess{
-    public async readFileAsync(filePath: string): Promise<string> {
+export class FileSystemDataAccess implements IFileSystemDataAccess {
+  public async readFileAsync(filePath: string): Promise<string> {
     try {
       filePath = path.resolve(filePath);
 
-      if(!fs.existsSync(filePath)) {
+      if (!fs.existsSync(filePath)) {
         throw new Error(`No file found in path ${filePath}`);
       }
 
       return await fs.promises.readFile(filePath, 'utf-8');
     } catch (error) {
-      throw new Error (`Error reading file ${error}`);
+      throw new Error(`Error reading file ${error}`);
     }
   }
 
   public getExtensionName(fileName: string): string {
-      return path.extname(fileName);
+    return path.extname(fileName);
   }
 
   // TODO: Needs rework
@@ -33,6 +33,7 @@ export class FileSystemDataAccess implements IFileSystemDataAccess{
       throw error;
     }
   }
+
   public isValidPath(pathToValidate: string, allowRelativePath: boolean): boolean {
     const maxPathLengthWindows: number = 260;
     if (process.platform === 'win32' && pathToValidate.length > maxPathLengthWindows) {

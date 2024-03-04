@@ -1,25 +1,35 @@
 import {IJournalService} from "../services/IJournalService";
 import {serviceCollection} from "../../inversify.config";
 import {IFileWriter} from "../services/IFileWriter";
-import {JSONObject} from "../../Shared/types/Json";
+import {JSONObject, JSONValue} from "../../Shared/types/Json";
 import {ServiceTypes} from "../ServiceTypes";
-import { injectable } from "inversify";
+import {injectable} from "inversify";
 import {JournalModel} from "../../Shared/models/JournalModel";
 import {JournalComponentType} from "../../Shared/types/JournalComponent";
 
 // Mock implementations for testing
 const fakeJsonObject1: JSONObject = {
   filePath: '/path/to/file',
-  metaData_foo: { value: 'metaDataValue1' },
-  metaData_bar: { value: 'metaDataValue2' },
-  ACTION_COMPONENT: { value: 'mario' },
-  INPUT_COMPONENT: { value: 'luigi' }
+  metaData: {
+    foo: 'metaDataValue1',
+    bar: 'metaDataValue2'
+  },
+  components: {
+    ACTION_COMPONENT: {value: 'mario'},
+    INPUT_COMPONENT: {value: 'luigi'}
+  }
+
 };
 
 const fakeJsonObject2: JSONObject = {
-  filePath: '/path/to/file2',
-  metaData_foo: { value: 'metaDataValue1' },
-  ACTION_COMPONENT: { value: 'peach' },
+  filePath: '/path/to/file',
+  metaData: {
+    foo: 'metaDataValue1',
+  },
+  components: {
+    ACTION_COMPONENT: {value: 'mario'},
+  }
+
 };
 
 @injectable()
@@ -28,6 +38,7 @@ class MockFileWriter implements IFileWriter {
     return true;
   }
 }
+
 @injectable()
 class MockFileReader implements IFileReader<JSONObject> {
 
@@ -64,39 +75,26 @@ describe('INTEGRATION_TEST JournalService', () => {
     expect(actualResult).toBeTruthy();
   })
 
-  it('should return an array of JournalModel objects', async () => {
+  it('INTEGRATION_TEST should return an array of JournalModel objects', async () => {
     // Arrange
-    const expectedFilePath1: string = '/path/to/file';
-    const expectedMetaData1: Map<string, JSONObject> = new Map<string, JSONObject>([
-      ['foo', { value: 'metaDataValue1' }],
-      ['bar', { value: 'metaDataValue2' }]
-    ]);
-    const expectedComponents1 = new Map<JournalComponentType, JSONObject>([
-      ['ACTION_COMPONENT', { value: 'mario' }],
-      ['INPUT_COMPONENT', { value: 'luigi' }]
-    ]);
-
+    const fakePath: string = '/path/to/'
     const expectedJournal1: JournalModel = {
-      filePath: expectedFilePath1,
-      metaData: expectedMetaData1,
-      components: expectedComponents1
+      filePath: fakeJsonObject1['filePath'] as string,
+      metaData: fakeJsonObject1['metaData'] as JSONObject,
+      components: fakeJsonObject1['components'] as {
+        [key in keyof JournalComponentType]: JSONValue
+      }
     };
-    const expectedFilePath2: string = '/path/to/file2';
-    const expectedMetaData2: Map<string, JSONObject> = new Map<string, JSONObject>([
-      ['foo', {value: 'metaDataValue1'}]
-    ]);
-    const expectedComponents2 = new Map<JournalComponentType, JSONObject>([
-      ['ACTION_COMPONENT', { value: 'peach' }],
-    ])
+
     const expectedJournal2: JournalModel = {
-      filePath: expectedFilePath2,
-      metaData: expectedMetaData2,
-      components: expectedComponents2
-    }
+      filePath: fakeJsonObject2['filePath'] as string,
+      metaData: fakeJsonObject2['metaData'] as JSONObject,
+      components: fakeJsonObject2['components'] as {
+        [key in keyof JournalComponentType]: JSONValue
+      }
+    };
 
     const expectedResults: JournalModel[] = [expectedJournal1, expectedJournal2];
-
-    const fakePath: string = '/path/to/file';
 
     // Act
     const actualResult: JournalModel[] = await sut.getAllJournalsFromDirectory(fakePath);
@@ -104,45 +102,4 @@ describe('INTEGRATION_TEST JournalService', () => {
     // Assert
     expect(actualResult).toEqual(expectedResults);
   })
-
-  it('should read all json files from directory', async () => {
-    // Arrange
-    const fakeDirectoryPath: string ='/path/to/';
-
-    const expectedFilePath1: string = '/path/to/file';
-    const expectedMetaData1: Map<string, JSONObject> = new Map<string, JSONObject>([
-      ['foo', { value: 'metaDataValue1' }],
-      ['bar', { value: 'metaDataValue2' }]
-    ]);
-    const expectedComponents1 = new Map<JournalComponentType, JSONObject>([
-      ['ACTION_COMPONENT', { value: 'mario' }],
-      ['INPUT_COMPONENT', { value: 'luigi' }]
-    ]);
-
-    const expectedJournal1: JournalModel = {
-      filePath: expectedFilePath1,
-      metaData: expectedMetaData1,
-      components: expectedComponents1
-    };
-    const expectedFilePath2: string = '/path/to/file2';
-    const expectedMetaData2: Map<string, JSONObject> = new Map<string, JSONObject>([
-      ['foo', {value: 'metaDataValue1'}]
-    ]);
-    const expectedComponents2 = new Map<JournalComponentType, JSONObject>([
-      ['ACTION_COMPONENT', { value: 'peach' }],
-    ])
-    const expectedJournal2: JournalModel = {
-      filePath: expectedFilePath2,
-      metaData: expectedMetaData2,
-      components: expectedComponents2
-    }
-
-    const expectedResults: JournalModel[] = [expectedJournal1, expectedJournal2];
-
-    // Act
-    const actualResults: JournalModel[] = await sut.getAllJournalsFromDirectory(fakeDirectoryPath);
-
-    // Assert
-    expect(actualResults).toEqual(expectedResults);
-  });
 });

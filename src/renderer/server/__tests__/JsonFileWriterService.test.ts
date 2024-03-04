@@ -3,7 +3,7 @@ import * as os from 'os';
 import * as path from 'path';
 
 import {serviceCollection} from "../../inversify.config";
-import { IFileWriter } from '../services/IFileWriter';
+import {IFileWriter} from '../services/IFileWriter';
 import {ServiceTypes} from "../ServiceTypes";
 
 describe('[SYSTEM_TEST] JsonFileWriterService - writeFile', () => {
@@ -19,7 +19,7 @@ describe('[SYSTEM_TEST] JsonFileWriterService - writeFile', () => {
   });
 
   afterAll(() => {
-    fs.rmSync(tempDirPath, { recursive: true, force: true });
+    fs.rmSync(tempDirPath, {recursive: true, force: true});
   });
 
   it('should write content to a file', async () => {

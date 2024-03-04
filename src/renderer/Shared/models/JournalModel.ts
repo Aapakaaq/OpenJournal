@@ -3,26 +3,29 @@ import {JSONObject, JSONValue} from "../types/Json";
 
 export interface JournalModel {
   filePath: string;
-  metaData: Map<string, JSONObject>;
-  components: Map<JournalComponentType, JSONObject>;
+  metaData: {
+    [key: string]: JSONValue
+  },
+  // TODO: Consider use the custom type
+  //  'SetWithObjectEquality' instead
+  components: {
+    [key in keyof JournalComponentType]: JSONValue
+  },
 }
 
-export function  JournalMapToModel(jsonObject: JSONObject): JournalModel{
-  const filePath: string = jsonObject["filePath"] as string;
-  const metaData: Map<string, JSONObject> = new Map<string, JSONObject>();
-  const components: Map<JournalComponentType, JSONObject> = new Map<JournalComponentType, JSONObject>();
 
-  for (const key in jsonObject) {
-    if (key === "filePath") continue;
+export function JournalMapToModel(jsonObject: JSONObject): JournalModel {
+  const filePath = jsonObject['filePath'] as string;
+  const metaData = jsonObject['metaData'] as JSONObject;
+  const components = jsonObject['components'] as {
+    [key in keyof JournalComponentType]: JSONValue
+  };
 
-    const value: JSONValue = jsonObject[key];
+  const journalModel: JournalModel = {
+    filePath: filePath,
+    metaData: metaData,
+    components: components,
+  };
 
-    if (key.startsWith("metaData_")) {
-      metaData.set(key.substring(9), value as JSONObject);
-    } else {
-      components.set(key as JournalComponentType, value as JSONObject);
-    }
-  }
-
-  return { filePath, metaData, components };
+  return journalModel;
 }
