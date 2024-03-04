@@ -1,9 +1,10 @@
-import { JournalModel } from "../models/JournalModel";
+import {JournalModel, JournalMapToModel} from "../models/JournalModel";
 import {IJournalService} from "./IJournalService";
 import {IFileWriter} from "./IFileWriter";
 import {ServiceTypes} from "../ServiceTypes";
 import { inject, injectable } from "inversify";
 import {JSONObject, JSONValue} from "../../Shared/types/Json";
+import {JournalComponentType} from "../../Shared/types/JournalComponent";
 
 @injectable()
 export class JournalService implements IJournalService {
@@ -29,15 +30,20 @@ export class JournalService implements IJournalService {
     }
 
     const dataToSave = { metaData, components};
-    const stringyfiedData = JSON.stringify(dataToSave);
-    const isWritten = await this.fileWriter.writeFile(filePath, stringyfiedData);
+    const stringyfiedData: string = JSON.stringify(dataToSave);
+    const isWritten: boolean = await this.fileWriter.writeFile(filePath, stringyfiedData);
 
     // TODO: Better error handling and return
     return isWritten;
   }
-  getAllJournalsFromDirectory(pathToDirectory: string): Promise<JournalModel[]> {
-        throw new Error("Method not implemented.");
+  public async getAllJournalsFromDirectory(pathToDirectory: string): Promise<JournalModel[]> {
+    if (!pathToDirectory || pathToDirectory.trim() === '') {
+      throw new Error('JSON string is null or empty');
     }
+    // TODO: Error handling
+    const fileContents: JSONObject[] = await this.fileReader.readFilesFromDirectoryAsync(pathToDirectory);
+    const journalModels: JournalModel[] = fileContents.map(content => JournalMapToModel(content))
 
-
+    return journalModels;
+    }
 }
