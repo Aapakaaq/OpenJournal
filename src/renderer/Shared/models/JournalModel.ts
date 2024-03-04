@@ -1,5 +1,5 @@
-import {JournalComponentType} from "../../Shared/types/JournalComponent";
-import {JSONObject, JSONValue} from "../../Shared/types/Json";
+import {JournalComponentType} from "../types/JournalComponent";
+import {JSONObject, JSONValue} from "../types/Json";
 
 export interface JournalModel {
   filePath: string;

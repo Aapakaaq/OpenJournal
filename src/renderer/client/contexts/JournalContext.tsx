@@ -1,6 +1,6 @@
 
 import { ReactNode, createContext, useState } from 'react';
-import { IJournal, JournalContextType } from '../../Shared/types/Journal'
+import { IJournal, JournalContextType } from '../../Shared/types/JournalEntry'
 import { JournalComponent, JournalComponentType } from '../../Shared/types/JournalComponent';
 import { SetWithContentEquality } from '../utils/SetWithContentEquality';
 

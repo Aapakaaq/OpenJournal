@@ -1,4 +1,4 @@
-import {JournalModel, JournalMapToModel} from "../models/JournalModel";
+import {JournalModel, JournalMapToModel} from "../../Shared/models/JournalModel";
 import {IJournalService} from "./IJournalService";
 import {IFileWriter} from "./IFileWriter";
 import {ServiceTypes} from "../ServiceTypes";

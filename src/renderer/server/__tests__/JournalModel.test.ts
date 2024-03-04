@@ -1,6 +1,6 @@
 import {JournalComponentType} from "../../Shared/types/JournalComponent";
 import {JSONObject} from "../../Shared/types/Json";
-import {JournalModel, JournalMapToModel} from "../models/JournalModel"; // Update 'yourFile' with the correct path
+import {JournalModel, JournalMapToModel} from "../../Shared/models/JournalModel"; // Update 'yourFile' with the correct path
 
 describe('mapToModel function', () => {
   it('should map JSON object to JournalModel with populated fields', () => {

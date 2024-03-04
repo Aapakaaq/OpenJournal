@@ -1,4 +1,4 @@
-import {JournalModel} from "../models/JournalModel";
+import {JournalModel} from "../../Shared/models/JournalModel";
 import {JSONArray} from "../../Shared/types/Json";
 
 export interface IJournalService {

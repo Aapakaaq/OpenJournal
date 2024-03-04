@@ -4,7 +4,7 @@ import {IFileWriter} from "../services/IFileWriter";
 import {JSONObject} from "../../Shared/types/Json";
 import {ServiceTypes} from "../ServiceTypes";
 import { injectable } from "inversify";
-import {JournalModel} from "../models/JournalModel";
+import {JournalModel} from "../../Shared/models/JournalModel";
 import {JournalComponentType} from "../../Shared/types/JournalComponent";
 
 // Mock implementations for testing
@@ -144,6 +144,5 @@ describe('INTEGRATION_TEST JournalService', () => {
 
     // Assert
     expect(actualResults).toEqual(expectedResults);
-
-  })
+  });
 });

@@ -1,5 +1,5 @@
 import { useCallback, useRef } from "react";
-import { IJournal } from "../../Shared/types/Journal";
+import { IJournal } from "../../Shared/types/JournalEntry";
 import { JournalComponentType, JournalComponent } from "../../Shared/types/JournalComponent";
 import { SetWithContentEquality } from "../utils/SetWithContentEquality";
 import { useCache } from "./useCache";

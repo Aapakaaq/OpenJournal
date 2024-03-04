@@ -1,9 +1,11 @@
 import { SetWithContentEquality } from "../../client/utils/SetWithContentEquality";
 import { JournalComponent, JournalComponentType } from "./JournalComponent";
+import {JSONObject} from "./Json";
 
 
 export interface IJournal {
     id: number;
+    metaData: Map<string, JSONObject>;
     componentSet: SetWithContentEquality<JournalComponentType, JournalComponent>;
 }
 
