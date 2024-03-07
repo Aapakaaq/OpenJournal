@@ -1,59 +1,43 @@
-import {createContext, ReactNode, useState} from 'react';
-import {JournalContextType} from '../../Shared/types/JournalEntry'
-import {JournalComponent, JournalComponentType} from '../../Shared/types/JournalComponent';
-import {JSONObject} from "../../Shared/types/Json";
+import {createContext, Dispatch, ReactNode, useCallback, useContext, useState} from 'react';
+
+
 import {JournalModel} from "../../Shared/models/JournalModel";
+import { JournalContextType } from '../types/JournalContextType';
 
 interface IProps {
   children: ReactNode;
 }
 
 const initialState: JournalModel = {
-  filePath: '',
-  metaData: new Map<string, JSONObject>(),
-  components: new Map<JournalComponentType, JournalComponent>(),
+  // TODO: SHOULD BE SET ON ONBOARDING. TMP FOR DEVELOPMENT
+  filePath: '/tmp/test.json',
+  metaData: {tags: ""},
+  components: {}
 }
 
-export const JournalContext = createContext<JournalContextType | null>(null)
+const JournalContext = createContext<JournalContextType | null>(null);
 
-export function JournalProvider({children}: IProps) {
-  const [journal, setJournal] = useState(initialState);
+function useJournal(): JournalContextType {
+  const context = useContext(JournalContext);
+  if (!context) {
+    throw new Error('useJournal must be used within a JournalProvider');
+  }
+  return context;
+}
 
-  function getJournal(): JournalModel {
-    return journal
+function JournalProvider({children}: IProps ) {
+  const [journalModel, setJournalModel] = useState<JournalModel>(initialState);
+
+  function getJournalModel(): JournalModel {
+    return journalModel
   }
 
-  /*
-    function addComponent<TComponent extends JournalComponent, TArgs extends any[]>
-        (component: new (...args: TArgs) => TComponent, ...args: TArgs): void{
-            const instance: TComponent = new component(...args);
-
-
-            const newComponentsSet = new
-                SetWithContentEquality<JournalComponentType, JournalComponent>(
-                    component => component.type,
-                    journal.componentSet.values()
-
-            );
-
-            newComponentsSet.add(instance);
-
-            setJournal((prevJournal: IJournal) => ({
-                metaData: prevJournal.metaData,
-                componentSet: newComponentsSet
-
-            }));
-    };
-
-    function getComponent<TComponent extends JournalComponent>
-        (componentType: JournalComponentType): TComponent | undefined {
-        return journal.componentSet.getValueByKey(componentType) as TComponent | undefined;
-    }
-
-*/
   return (
-    <JournalContext.Provider value={{getJournal}}>
+    <JournalContext.Provider value={{ getJournalModel}}>
       {children}
     </JournalContext.Provider>
-  )
+  );
 }
+
+
+export{useJournal, JournalProvider}

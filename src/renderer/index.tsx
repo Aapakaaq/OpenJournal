@@ -5,6 +5,14 @@ import NotFoundPage from './client/pages/NotFoundPage';
 import Root from './client/routes/Root'
 import SettingsPage from './client/pages/Settings';
 import WritePage from './client/pages/WritePage/WritePage';
+
+// replace console.* for disable log on production
+if (process.env.NODE_ENV === 'production') {
+  console.log = () => {}
+  console.error = () => {}
+  console.debug = () => {}
+}
+
 const container = document.getElementById('root') as HTMLElement;
 const root = createRoot(container);
 

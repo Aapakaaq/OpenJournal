@@ -1,24 +1,23 @@
 import './SubmitJournal.css'
-import {JournalModel} from "../../../Shared/models/JournalModel";
+import {useJournal} from "../../contexts/JournalContext";
 
-interface SubmitProps {
-  journal: JournalModel
-}
 
-// TODO:
-export function SubmitJournal({journal}: SubmitProps) {
-  // TODO: Create service for converting to json and submiting to backend
+export function SubmitJournal() {
+  const {getJournalModel} = useJournal();
 
   async function onClickHandler() {
-    console.log("aaa")
-    console.log(journal.components)
-    if (journal.components.length === 0) return;
-    const journalAsJsonString: string = JSON.stringify(journal)
-    console.log(journal.metaData);
-    console.log(journalAsJsonString);
-    // Use IPC API to query Electron's main thread and run this method
+    console.log("Submitting journal...")
+    const journalAsJsonString: string = JSON.stringify(getJournalModel())
+
     const result = await window.electron.ipcRenderer.saveJournal(journalAsJsonString);
-    console.log(result)
+
+    // TODO: inform user on failure + reason
+    if (result){
+      console.log(`Journal submitted at ${getJournalModel().filePath}`);
+    }
+    else {
+      console.error(`Journal could not be saved at ${getJournalModel().filePath}`);
+    }
 
   }
 
