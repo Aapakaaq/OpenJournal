@@ -1,33 +1,35 @@
-import { JournalComponentType } from "../types/JournalComponent";
 import {JSONObject, JSONValue} from "../types/Json";
 
 
+type MetaData = { [key: string]: JSONValue}
 
-
-export interface JournalModel {
+type JournalModel = {
   filePath: string;
-  metaData: {
-    [key: string]: JSONValue
-  },
-  components: {
-    [key in keyof JournalComponentType]: JournalComponentType[key]
-  },
+  metaData: MetaData,
+  textContent: string,
+  actions?: Actions
 }
 
+type Actions = {
+  [key in keyof string]: JSONValue
+}
+
+
 // TODO: Validation check of component types
-export function JournalMapToModel(jsonObject: JSONObject): JournalModel {
+function journalMapToModel(jsonObject: JSONObject): JournalModel {
   const filePath: string = jsonObject['filePath'] as string;
-  const metaData: JSONObject = jsonObject['metaData'] as JSONObject;
-  const components = jsonObject['components'] as {
-    [key in keyof JournalComponentType]: JournalComponentType[key]
-  };
-
-
+  const metaData: MetaData = jsonObject['metaData'] as MetaData;
+  const textContent: string = jsonObject['textContent'] as string;
+  const actions: Actions = jsonObject['actions'] as Actions;
   const journalModel: JournalModel = {
     filePath: filePath,
     metaData: metaData,
-    components: components,
+    textContent: textContent,
+    actions: actions
   };
 
   return journalModel;
 }
+
+
+export {journalMapToModel, MetaData, JournalModel, Actions}

@@ -1,4 +1,4 @@
-import {JournalMapToModel, JournalModel} from "../../Shared/models/JournalModel";
+import {journalMapToModel, JournalModel} from "../../Shared/models/JournalModel";
 import {IJournalService} from "./IJournalService";
 import {IFileWriter} from "./IFileWriter";
 import {ServiceTypes} from "../ServiceTypes";
@@ -24,13 +24,17 @@ export class JournalService implements IJournalService {
     }
 
     // TODO: Need to validate json
-    const {filePath, metaData, components} = JSON.parse(jsonString) as JournalModel;
+    const {filePath, metaData, textContent, actions} = JSON.parse(jsonString) as JournalModel;
     if (!filePath || filePath.trim() === "") {
       throw new Error('Missing path in journal');
     }
 
-    const dataToSave = {metaData, components};
-    const stringyfiedData: string = JSON.stringify(dataToSave);
+    const dataToSave = {metaData, textContent, actions};
+
+    const space: number = 2;
+    const replacer = null;
+    const stringyfiedData: string = JSON.stringify(dataToSave, replacer, space);
+
     const isWritten: boolean = await this.fileWriter.writeFile(filePath, stringyfiedData);
 
     // TODO: Better error handling and return
@@ -43,7 +47,7 @@ export class JournalService implements IJournalService {
     }
     // TODO: Error handling
     const fileContents: JSONObject[] = await this.fileReader.readFilesFromDirectoryAsync(pathToDirectory);
-    const journalModels: JournalModel[] = fileContents.map(content => JournalMapToModel(content))
+    const journalModels: JournalModel[] = fileContents.map(content => journalMapToModel(content))
 
     return journalModels;
   }

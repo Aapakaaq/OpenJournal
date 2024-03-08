@@ -1,5 +1,5 @@
 import {JSONObject} from "../../Shared/types/Json";
-import {JournalMapToModel, JournalModel} from "../../Shared/models/JournalModel"; // Update 'yourFile' with the correct path
+import {journalMapToModel, JournalModel} from "../../Shared/models/JournalModel"; // Update 'yourFile' with the correct path
 
 describe('mapToModel function', () => {
   it('UNIT TEST should map JSON object to JournalModel with populated fields', () => {
@@ -15,19 +15,20 @@ describe('mapToModel function', () => {
         },
         key5: [1, 2, 3],
       },
-      components: {
-        freeTextComponent: {
-          data: "foo bar",
-        },
-      },
+      textContent: "making\nmy way down town",
+      actions: {
+        walkingSpeed: "fast",
+        faces: "pass"
+      }
     };
 
     // Act
-    const actualResult: JournalModel = JournalMapToModel(fakeJsonObject);
+    const actualResult: JournalModel = journalMapToModel(fakeJsonObject);
     // Assert
     expect(actualResult.filePath).toEqual(fakeJsonObject['filePath']);
     expect(actualResult.metaData).toEqual(fakeJsonObject['metaData']);
-    expect(actualResult.components).toEqual(fakeJsonObject['components']);
+    expect(actualResult.textContent).toEqual(fakeJsonObject['textContent']);
+    expect(actualResult.actions).toEqual(fakeJsonObject['actions']);
   });
 
   // TODO:
@@ -61,16 +62,17 @@ describe('mapToModel function', () => {
     const emptyJsonObject: JSONObject = {
       filePath: '/path/to/file',
       metaData: {},
-      components: {}
+      textArea: ""
     };
 
     // Act
-    const actualResult: JournalModel = JournalMapToModel(emptyJsonObject);
+    const actualResult: JournalModel = journalMapToModel(emptyJsonObject);
 
 
     // Assert
     expect(actualResult.filePath).toEqual(emptyJsonObject['filePath']);
     expect(actualResult.metaData).toEqual(emptyJsonObject['metaData']);
-    expect(actualResult.components).toEqual(emptyJsonObject['components']);
+    expect(actualResult.textContent).toEqual(emptyJsonObject['components']);
+    expect(actualResult.actions).toBeNull;
   });
 });

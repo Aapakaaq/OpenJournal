@@ -4,8 +4,7 @@ import {IFileWriter} from "../services/IFileWriter";
 import {JSONObject, JSONValue} from "../../Shared/types/Json";
 import {ServiceTypes} from "../ServiceTypes";
 import {injectable} from "inversify";
-import {JournalModel} from "../../Shared/models/JournalModel";
-import {JournalComponentType} from "../../Shared/types/JournalComponent";
+import {Actions, JournalModel, MetaData} from "../../Shared/models/JournalModel";
 
 // Mock implementations for testing
 const fakeJsonObject1: JSONObject = {
@@ -14,11 +13,11 @@ const fakeJsonObject1: JSONObject = {
     foo: 'metaDataValue1',
     bar: 'metaDataValue2'
   },
-  components: {
-    ACTION_COMPONENT: {value: 'mario'},
-    INPUT_COMPONENT: {value: 'luigi'}
+  textContent: "mario",
+  actions: {
+    foo: 42,
+    bar: "luigi"
   }
-
 };
 
 const fakeJsonObject2: JSONObject = {
@@ -26,10 +25,7 @@ const fakeJsonObject2: JSONObject = {
   metaData: {
     foo: 'metaDataValue1',
   },
-  components: {
-    ACTION_COMPONENT: {value: 'mario'},
-  }
-
+  textContent: "peach",
 };
 
 @injectable()
@@ -80,18 +76,16 @@ describe('INTEGRATION_TEST JournalService', () => {
     const fakePath: string = '/path/to/'
     const expectedJournal1: JournalModel = {
       filePath: fakeJsonObject1['filePath'] as string,
-      metaData: fakeJsonObject1['metaData'] as JSONObject,
-      components: fakeJsonObject1['components'] as {
-        [key in keyof JournalComponentType]: JSONValue
-      }
+      metaData: fakeJsonObject1['metaData'] as MetaData,
+      textContent: fakeJsonObject1['textContent'] as string,
+      actions: fakeJsonObject1['actions'] as Actions
     };
 
     const expectedJournal2: JournalModel = {
       filePath: fakeJsonObject2['filePath'] as string,
-      metaData: fakeJsonObject2['metaData'] as JSONObject,
-      components: fakeJsonObject2['components'] as {
-        [key in keyof JournalComponentType]: JSONValue
-      }
+      metaData: fakeJsonObject2['metaData'] as MetaData,
+      textContent: fakeJsonObject2['textContent'] as string,
+      actions: fakeJsonObject2['actions'] as Actions
     };
 
     const expectedResults: JournalModel[] = [expectedJournal1, expectedJournal2];

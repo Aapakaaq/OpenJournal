@@ -8,7 +8,7 @@ export function SubmitJournal() {
   async function onClickHandler() {
     console.log("Submitting journal...")
     const journalAsJsonString: string = JSON.stringify(getJournalModel())
-
+    console.log(journalAsJsonString);
     const result = await window.electron.ipcRenderer.saveJournal(journalAsJsonString);
 
     // TODO: inform user on failure + reason
@@ -18,7 +18,6 @@ export function SubmitJournal() {
     else {
       console.error(`Journal could not be saved at ${getJournalModel().filePath}`);
     }
-
   }
 
   return (

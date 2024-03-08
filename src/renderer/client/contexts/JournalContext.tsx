@@ -1,6 +1,4 @@
 import {createContext, Dispatch, ReactNode, useCallback, useContext, useState} from 'react';
-
-
 import {JournalModel} from "../../Shared/models/JournalModel";
 import { JournalContextType } from '../types/JournalContextType';
 
@@ -12,7 +10,7 @@ const initialState: JournalModel = {
   // TODO: SHOULD BE SET ON ONBOARDING. TMP FOR DEVELOPMENT
   filePath: '/tmp/test.json',
   metaData: {tags: ""},
-  components: {}
+  textContent: '',
 }
 
 const JournalContext = createContext<JournalContextType | null>(null);
@@ -32,12 +30,18 @@ function JournalProvider({children}: IProps ) {
     return journalModel
   }
 
+  function updateText(text: string): void {
+    setJournalModel(prevState => ({
+      ...prevState,
+      textContent: text
+    }));
+  }
+
   return (
-    <JournalContext.Provider value={{ getJournalModel}}>
+    <JournalContext.Provider value={{ getJournalModel, updateText}}>
       {children}
     </JournalContext.Provider>
   );
 }
-
 
 export{useJournal, JournalProvider}
