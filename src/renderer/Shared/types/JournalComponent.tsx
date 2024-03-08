@@ -5,10 +5,10 @@ type JournalComponent = {
 };
 
 
-type JournalComponentType = ActionComponent| FreeTextComponent
+type JournalComponentType = ActionComponent| TextAreaInputComponent
 
 
-type FreeTextComponent = {
+type TextAreaInputComponent = {
   data: string
 }
 

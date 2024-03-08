@@ -1,6 +1,6 @@
-import './JournalInput.css'
+import './TextAreaInput.css'
 
-export default function JournalInput() {
+export default function TextAreaInput() {
   return (
     // TODO: Add spellCheck to settings
     <div>
