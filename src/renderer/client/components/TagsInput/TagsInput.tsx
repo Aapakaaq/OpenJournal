@@ -18,6 +18,7 @@ export default function TagsInput() {
     const {key} = event;
     const trimmedInput = input.trim();
 
+    // Add tag
     if (key === tagSeperationKey && trimmedInput.length && !tags.includes(trimmedInput)) {
       event.preventDefault();
       const newValue = [...tags, trimmedInput];
@@ -26,7 +27,7 @@ export default function TagsInput() {
       updateMetaData(fieldKey, newValue);
     }
 
-    // isKeyReleased prevents unwanted deletes when holding down Backspace
+    // Remove tag - isKeyReleased prevents unwanted deletes when holding down Backspace
     const isInputEmptyAndTagsPresent: boolean = input.length== 0 && tags.length > 0;
     if (key === "Backspace" && isInputEmptyAndTagsPresent && isKeyReleased) {
       event.preventDefault();
@@ -58,14 +59,25 @@ export default function TagsInput() {
     updateMetaData(fieldKey, filteredTags);
   }
 
+  // @ts-ignore
   function onFocusHandler(event: FocusEvent<HTMLInputElement>): void{
     event.target.placeholder = ""
   }
 
+  // @ts-ignore
   function onBlurHandler(event: FocusEvent<HTMLInputElement>): void{
     event.target.placeholder = placeHolderText;
   }
-
+  
+  function createTags(tag: string, index: number) {
+    if (tag === '') return;
+    return (
+      <div className="tag">
+        {tag}
+        <button onClick={() => deleteTag(index)}>x</button>
+      </div>
+    );
+  }
   return (
     <div className={"tags-container"}>
       {tags.map(createTags)}
@@ -82,13 +94,5 @@ export default function TagsInput() {
     </div>
   );
 
-  function createTags(tag: string, index: number) {
-    if (tag === '') return;
-    return (
-      <div className="tag">
-        {tag}
-      <button onClick={() => deleteTag(index)}>x</button>
-    </div>
-    );
-  }
+
 }
