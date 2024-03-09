@@ -68,9 +68,8 @@ export default function TagsInput() {
   function onBlurHandler(event: FocusEvent<HTMLInputElement>): void{
     event.target.placeholder = placeHolderText;
   }
-  
-  function createTags(tag: string, index: number) {
-    if (tag === '') return;
+
+  function createTags(tag: string, index: number): JSX.Element {
     return (
       <div className="tag">
         {tag}
