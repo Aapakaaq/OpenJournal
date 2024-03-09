@@ -1,6 +1,7 @@
 import {createContext, Dispatch, ReactNode, useCallback, useContext, useState} from 'react';
 import {JournalModel} from "../../Shared/models/JournalModel";
 import { JournalContextType } from '../types/JournalContextType';
+import {JSONValue} from "../../Shared/types/Json";
 
 interface IProps {
   children: ReactNode;
@@ -9,7 +10,7 @@ interface IProps {
 const initialState: JournalModel = {
   // TODO: SHOULD BE SET ON ONBOARDING. TMP FOR DEVELOPMENT
   filePath: '/tmp/test.json',
-  metaData: {tags: ""},
+  metaData: {},
   textContent: '',
 }
 
@@ -37,8 +38,18 @@ function JournalProvider({children}: IProps ) {
     }));
   }
 
+  function updateMetaData(key: string, value: JSONValue): void {
+    setJournalModel(prevState => ({
+      ...prevState,
+      metaData: {
+        ...prevState.metaData,
+        [key]: value,
+      },
+    }));
+  }
+
   return (
-    <JournalContext.Provider value={{ getJournalModel, updateText}}>
+    <JournalContext.Provider value={{ getJournalModel, updateText, updateMetaData}}>
       {children}
     </JournalContext.Provider>
   );

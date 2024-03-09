@@ -68,7 +68,6 @@ describe('mapToModel function', () => {
     // Act
     const actualResult: JournalModel = journalMapToModel(emptyJsonObject);
 
-
     // Assert
     expect(actualResult.filePath).toEqual(emptyJsonObject['filePath']);
     expect(actualResult.metaData).toEqual(emptyJsonObject['metaData']);

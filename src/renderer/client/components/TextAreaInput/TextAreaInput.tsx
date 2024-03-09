@@ -7,16 +7,19 @@ export default function TextAreaInput() {
   const [textContent, setTextContent] = useState<string>('')
 
   function handleChange(event: ChangeEvent<HTMLTextAreaElement>) {
-    setTextContent(event.target.value);
-    updateText(textContent);
+    const value: string = event.target.value;
+    setTextContent(value);
+    updateText(value);
+    console.log(textContent)
   }
+
   return (
     // TODO: Add spellCheck to settings
-    <div>
+    <div className={"textArea-container"}>
       <textarea className="journal-input"
                 spellCheck='false'
                 value={textContent}
-                onChange={e => handleChange(e)}
+                onChange={handleChange}
       />
     </div>
   );

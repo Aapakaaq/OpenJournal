@@ -1,3 +1,7 @@
+.write-page-container {
+  width: 100%;
+  max-width: 100%;
+}
 
 .title {
   font-size: 20px;
