@@ -15,7 +15,7 @@ type Actions = {
 }
 
 
-// TODO: Validation check of component types
+// TODO: validation check
 function journalMapToModel(jsonObject: JSONObject): JournalModel {
   const filePath: string = jsonObject['filePath'] as string;
   const metaData: MetaData = jsonObject['metaData'] as MetaData;
