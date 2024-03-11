@@ -7,13 +7,13 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-
 }
 
 .action-form input {
   border: 1px grey solid;
   border-radius: 5px;
   padding: 14px;
+  margin-bottom: 10px;
 }
 
 .action {
@@ -21,7 +21,6 @@
   align-items: flex-start;
   margin-bottom: 10px;
 }
-
 
 .action button {
 }
@@ -35,7 +34,6 @@
 }
 
 .action .due-date {
-
   width: max-content;
   margin-left: auto;
   margin-right: 10px;

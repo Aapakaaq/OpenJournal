@@ -46,8 +46,10 @@ function JournalProvider({children}: IProps ) {
         [key]: value,
       },
     }));
-  }22
+  }
 
+
+  // TODO: Fix
   function updateActions(key: string, value: JSONValue): void {
     setJournalModel(prevState => ({
       ...prevState,

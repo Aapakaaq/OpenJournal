@@ -4,6 +4,7 @@ import {useJournal} from "../../contexts/JournalContext";
 import './ActionInput.css'
 
 // TODO: Required field + user feedback
+// - Create a form containing all the inputs of write page
 export default function ActionInput() {
   const {updateActions} = useJournal();
   const [newActionKey, setNewActionKey] = useState<string>('');

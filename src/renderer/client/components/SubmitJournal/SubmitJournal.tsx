@@ -14,6 +14,7 @@ export function SubmitJournal() {
     // TODO: inform user on failure + reason
     if (result){
       console.log(`Journal submitted at ${getJournalModel().filePath}`);
+      resetJournal();
     }
     else {
       console.error(`Journal could not be saved at ${getJournalModel().filePath}`);
@@ -23,7 +24,7 @@ export function SubmitJournal() {
   return (
     <div className="container">
       <button className="submit-button" onClick={onClickHandler}>
-        Create entry
+        Save
       </button>
     </div>
   )
