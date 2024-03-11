@@ -5,7 +5,7 @@ import {useJournal} from "../../contexts/JournalContext";
 export default function TagsInput() {
   const {updateMetaData, journalEntry} = useJournal()
   const fieldKey: string = 'tags';
-
+  let tags: string[] = [];
 
   useEffect(() => {
     console.log("TagsInput mounted");
@@ -13,14 +13,24 @@ export default function TagsInput() {
       console.log(`adding the field ${fieldKey}  to metaData`);
       updateMetaData(fieldKey, '');
     }
+    tags = journalEntry.metaData[fieldKey] as string[];
   }, []);
 
   const [input, setInput] = useState('');
-  const [tags, setTags] = useState<string[]>([]);
   const [isKeyReleased, setIsKeyReleased] = useState(false);
 
   const tagSeperationKey: string = ',';
   const placeHolderText: string = 'Enter a tag';
+
+
+  function addTag(tag: string){
+    if (tags.includes(tag)) return;
+
+    const newValue = [...tags, tag];
+
+    setInput('');
+    updateMetaData(fieldKey, newValue);
+  }
 
   // @ts-ignore
   function onKeyDownHandler(event: KeyboardEvent<HTMLInputElement>): void {
@@ -29,19 +39,18 @@ export default function TagsInput() {
 
     // Add tag
     const isValidSeperationKey = (key === tagSeperationKey || key === "Enter")
-    if (isValidSeperationKey && trimmedInput.length && !tags.includes(trimmedInput)) {
+    if (isValidSeperationKey && trimmedInput.length) {
+      addTag(trimmedInput);
       event.preventDefault();
-      const newValue = [...tags, trimmedInput];
-      setTags(prevState => newValue);
-      setInput('');
-      updateMetaData(fieldKey, newValue);
     }
+
     if (key === "Enter" && !trimmedInput.length) {
       event.preventDefault();
       moveToNextFormElement(event);
 
       return;
     }
+
     // Remove tag - isKeyReleased prevents unwanted deletes when holding down Backspace
     const isInputEmptyAndTagsPresent: boolean = input.length == 0 && tags.length > 0;
     if (key === "Backspace" && isInputEmptyAndTagsPresent && isKeyReleased) {
@@ -49,7 +58,6 @@ export default function TagsInput() {
       const tagsCopy = [...tags];
       const poppedTag = tagsCopy.pop();
 
-      setTags(tagsCopy);
       // @ts-ignore
       setInput(poppedTag);
       setIsKeyReleased(false);
@@ -60,7 +68,7 @@ export default function TagsInput() {
   // @ts-ignore
   function moveToNextFormElement(event: KeyboardEvent<HTMLInputElement>) {
     const form = event.target.form;
-    const index = Array.prototype.indexOf.call(form, event.target);
+    const index: number = Array.prototype.indexOf.call(form, event.target);
     const nextIndex = index + 1;
 
     if (form.elements[nextIndex]) {
@@ -82,7 +90,6 @@ export default function TagsInput() {
   function deleteTag(index: number): void {
     const filteredTags: string[] = tags.filter((tag: string, i: number): boolean =>
       i !== index);
-    setTags(filteredTags);
 
     updateMetaData(fieldKey, filteredTags);
   }
@@ -95,6 +102,10 @@ export default function TagsInput() {
 
   // @ts-ignore
   function onBlurHandler(event: FocusEvent<HTMLInputElement>): void {
+    if (input){
+      const trimmedInput: string = input.trim();
+      addTag(trimmedInput);
+    }
     event.target.placeholder = placeHolderText;
   }
 

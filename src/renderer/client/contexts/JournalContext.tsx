@@ -65,7 +65,7 @@ function JournalProvider({children}: IProps) {
 
   return (
     <JournalContext.Provider
-      value={{journalEntry, getJournalModel, updateText, updateMetaData, updateActions, resetEntry}}>
+      value={{journalEntry, updateText, updateMetaData, updateActions, resetEntry}}>
       {children}
     </JournalContext.Provider>
   );
