@@ -22,7 +22,8 @@ export function SubmitJournal() {
 
   return (
     <div className="container">
-      <button className="submit-button" onClick={onClickHandler}>
+      <button className="submit-button"
+              onClick={onClickHandler} type={"submit"}>
         Save
       </button>
     </div>

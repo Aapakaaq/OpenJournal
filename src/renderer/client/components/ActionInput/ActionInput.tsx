@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {RefObject, createRef, useRef, useState} from "react";
 import {Actions} from "../../../Shared/models/JournalModel";
 import {useJournal} from "../../contexts/JournalContext";
 import './ActionInput.css'
@@ -6,21 +6,28 @@ import './ActionInput.css'
 // TODO: Required field + user feedback
 // - Create a form containing all the inputs of write page
 export default function ActionInput() {
+  let actionKeyRef: NonNullable<RefObject<HTMLInputElement>> = createRef<HTMLInputElement>();
+  let actionDateRef: NonNullable<RefObject<HTMLInputElement>> = createRef<HTMLInputElement>();
+  const inputRefs: RefObject<HTMLInputElement>[] = [actionKeyRef, actionDateRef];
+  const [fieldIntIndex, setFieldIntIndex] = useState<number>(0);
+
   const {updateActions} = useJournal();
+  const {journalEntry} = useJournal()
   const [newActionKey, setNewActionKey] = useState<string>('');
+
 
   // year-month-day
   const defaultDate = new Date().toISOString().split('T')[0]
   const [actionDate, setActionDate] = useState(defaultDate)
 
-  const [actions, setAction] = useState<NonNullable<Actions>>();
+
 
   function createActions() {
-    if (!actions) return;
+    if (!journalEntry.actions) return;
     // @ts-ignore
     return (
       <div className={'actions'}>
-        {Object.entries(actions).map(([key, value], index: number) => (
+        {Object.entries(journalEntry.actions).map(([key, value], index: number) => (
             <div className={'action'}>
               <div className={'key'}>
                 {key}
@@ -28,7 +35,7 @@ export default function ActionInput() {
               <div className={'due-date'}>
                 {value.dueDate}
               </div>
-              <button onClick={() => deleteAction(index)}>x</button>
+              <button onClick={event => deleteAction(event, index)}>x</button>
             </div>
           )
         )}
@@ -36,61 +43,69 @@ export default function ActionInput() {
     )
   }
 
-  // @ts-ignore
-  // Moves to the begninning of the form when going out of bound
-  function moveToNextInput(event: KeyboardEvent<HTMLInputElement>) {
+  function onKeyHandler(event: KeyboardEvent<HTMLInputElement>): void {
     // TODO: Add feedback to user that value is missing
     const trimmedInput: string = event.target.value.trim();
-    if (trimmedInput === '') return;
+    if (event.key === "Enter" && trimmedInput === ''){
+      event.preventDefault();
+      return;
+    }
 
     if (event.key === "Enter") {
-      const form = event.target.form;
-      const index = Array.prototype.indexOf.call(form, event.target);
-      const nextIndex = index + 1;
-
-      if (form.elements[nextIndex]) {
-        form.elements[nextIndex].focus();
-      } else {
-        form.elements[0].focus(); // Return to the first element
-      }
       event.preventDefault();
+      moveToNextInput();
     }
 
   }
 
   // @ts-ignore
-  function addActions(event: KeyboardEvent<HTMLInputElement>){
-    if (event.key !== "Enter") return;
-
-    // TODO: Add feedback to user that value is missing
-    if (newActionKey.trim() === '') return;
-
-    const newAction : Actions = {
-      [newActionKey]: {
-        dueDate: actionDate
-      }
+  // Moves to the begninning of the form when going out of bound
+  function moveToNextInput() {
+    const nextIndex: number = fieldIntIndex +1;
+    console.log(nextIndex)
+    if (inputRefs[nextIndex]){
+        // @ts-ignore
+      inputRefs[nextIndex].current.focus();
+        setFieldIntIndex(nextIndex);
+    } else {
+      setFieldIntIndex(0)
+      // @ts-ignore
+      inputRefs[0].current.focus()
     }
-    setAction(prevState => ({
-      ...prevState,
-        [newActionKey]: {
-          dueDate: actionDate.toString()
-        }
-    }));
-
-    updateActions(newActionKey,
-      {due: actionDate});
-    resetAction();
-
-    moveToNextInput(event)
   }
 
-  function deleteAction(index: number): void {
-    const newActions: Actions = {};
-    Object.entries(actions)
-      .filter((action: [string, { dueDate: string }], i: number): boolean => i !== index)
-      .forEach(([key, value]) => { newActions[key] = value;});
+  // @ts-ignore
+  function addActions(event: KeyboardEvent<HTMLInputElement>): void{
+    // TODO: Add feedback to user that value is missing
+    if (newActionKey.trim() === '') {
+      moveToNextInput();
+      event.preventDefault();
+      return;
+    }
+    if (event.key === "Enter"){
+     const newAction : Actions = {
+       [newActionKey]: {
+         dueDate: actionDate
+       }
+     }
 
-    setAction(newActions)
+      updateActions(newActionKey, {due: actionDate});
+
+      resetAction();
+      event.preventDefault();
+      moveToNextInput();
+    }
+  }
+
+  function deleteAction(event: MouseEvent<HTMLButtonElement>, index: number): void {
+    const newActions: Actions = {};
+    // @ts-ignore
+    Object.entries(journalEntry.actions)
+      .filter((action: [string, { dueDate: string }], i: number): boolean => i !== index)
+      .forEach(([key, value]) => {updateActions(key, value)});
+
+
+    event.preventDefault();
   }
 
   function resetAction(){
@@ -100,18 +115,21 @@ export default function ActionInput() {
 
   return (
     <div className={'action-input-container'}>
-
-      <form className={'action-form'}>
+      <div className={'action-inputs'}>
         <input className={'key-input'}
+               ref={actionKeyRef}
                placeholder={'Enter action'}
                value={newActionKey}
+               onKeyDown={onKeyHandler}
                onChange={e => setNewActionKey(e.target.value)}
-               onKeyDown={moveToNextInput}/>
+               onFocus={() => setFieldIntIndex(0)} />
         <input type="date"
+               ref={actionDateRef}
                className={'due-input'}
                defaultValue={actionDate}
-               onKeyDown={addActions}/>
-      </form>
+               onKeyDown={addActions}
+               onFocus={() => setFieldIntIndex(1)} />
+      </div>
       {createActions()}
     </div>
   );

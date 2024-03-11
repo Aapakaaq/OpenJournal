@@ -1,10 +1,19 @@
-import {ChangeEvent, useState } from "react";
+import {ChangeEvent, useEffect, useState } from "react";
 import "./TagsInput.css"
 import {useJournal} from "../../contexts/JournalContext";
 
 export default function TagsInput() {
-  const {updateMetaData} = useJournal()
+  const {updateMetaData, journalEntry} = useJournal()
   const fieldKey: string = 'tags';
+
+
+  useEffect(() => {
+    console.log("TagsInput mounted");
+    if (!journalEntry.metaData[fieldKey]) {
+      console.log(`adding the field ${fieldKey}  to metaData`);
+      updateMetaData(fieldKey, '');
+    }
+  }, []);
 
   const [input, setInput] = useState('');
   const [tags, setTags] = useState<string[]>([]);
@@ -19,14 +28,20 @@ export default function TagsInput() {
     const trimmedInput = input.trim();
 
     // Add tag
-    if (key === tagSeperationKey && trimmedInput.length && !tags.includes(trimmedInput)) {
+    const isValidSeperationKey = (key === tagSeperationKey || key === "Enter")
+    if (isValidSeperationKey && trimmedInput.length && !tags.includes(trimmedInput)) {
       event.preventDefault();
       const newValue = [...tags, trimmedInput];
       setTags(prevState => newValue);
       setInput('');
       updateMetaData(fieldKey, newValue);
     }
+    if (key === "Enter" && !trimmedInput.length) {
+      event.preventDefault();
+      moveToNextFormElement(event);
 
+      return;
+    }
     // Remove tag - isKeyReleased prevents unwanted deletes when holding down Backspace
     const isInputEmptyAndTagsPresent: boolean = input.length== 0 && tags.length > 0;
     if (key === "Backspace" && isInputEmptyAndTagsPresent && isKeyReleased) {
@@ -39,6 +54,18 @@ export default function TagsInput() {
       setInput(poppedTag);
       setIsKeyReleased(false);
       updateMetaData(fieldKey, tagsCopy);
+    }
+  }
+
+  function moveToNextFormElement(event: KeyboardEvent<HTMLInputElement>) {
+    const form = event.target.form;
+    const index = Array.prototype.indexOf.call(form, event.target);
+    const nextIndex = index + 1;
+
+    if (form.elements[nextIndex]) {
+      form.elements[nextIndex].focus();
+    } else {
+      form.elements[0].focus(); // Return to the first element
     }
   }
 
@@ -61,12 +88,22 @@ export default function TagsInput() {
 
   // @ts-ignore
   function onFocusHandler(event: FocusEvent<HTMLInputElement>): void{
+
     event.target.placeholder = ""
   }
 
   // @ts-ignore
   function onBlurHandler(event: FocusEvent<HTMLInputElement>): void{
     event.target.placeholder = placeHolderText;
+  }
+
+
+  function renderTags(){
+    const values: string[] = journalEntry.metaData[fieldKey] as string[];
+    if(!values) return;
+    console.log(values);
+
+    return values.map(createTags);
   }
 
   function createTags(tag: string, index: number): JSX.Element {
@@ -77,9 +114,10 @@ export default function TagsInput() {
       </div>
     );
   }
+
   return (
     <div className={"tags-container"}>
-      {tags.map(createTags)}
+      {renderTags()}
       <input
         className={"tags-input"}
         value={input}

@@ -25,21 +25,21 @@ function useJournal(): JournalContextType {
 }
 
 function JournalProvider({children}: IProps ) {
-  const [journalModel, setJournalModel] = useState<JournalModel>(initialState);
+  const [journalEntry, setJournalEntry] = useState<JournalModel>(initialState);
 
   function getJournalModel(): JournalModel {
-    return journalModel
+    return journalEntry
   }
 
   function updateText(text: string): void {
-    setJournalModel(prevState => ({
+    setJournalEntry(prevState => ({
       ...prevState,
       textContent: text
     }));
   }
 
   function updateMetaData(key: string, value: JSONValue): void {
-    setJournalModel(prevState => ({
+    setJournalEntry(prevState => ({
       ...prevState,
       metaData: {
         ...prevState.metaData,
@@ -48,10 +48,12 @@ function JournalProvider({children}: IProps ) {
     }));
   }
 
-
+  function resetEntry(): void{
+    setJournalEntry(initialState);
+  }
   // TODO: Fix
   function updateActions(key: string, value: JSONValue): void {
-    setJournalModel(prevState => ({
+    setJournalEntry(prevState => ({
       ...prevState,
       actions: {
         ...prevState.actions,
@@ -61,7 +63,7 @@ function JournalProvider({children}: IProps ) {
   }
 
   return (
-    <JournalContext.Provider value={{ getJournalModel, updateText, updateMetaData, updateActions}}>
+    <JournalContext.Provider value={{journalEntry, getJournalModel, updateText, updateMetaData, updateActions, resetEntry}}>
       {children}
     </JournalContext.Provider>
   );

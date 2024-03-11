@@ -3,13 +3,13 @@
   max-width: 100%;
 }
 
-.action-form {
+.action-inputs {
   display: flex;
   align-items: flex-start;
   gap: 10px;
 }
 
-.action-form input {
+.action-input-container input {
   border: 1px grey solid;
   border-radius: 5px;
   padding: 14px;
@@ -34,7 +34,7 @@
 }
 
 .action .due-date {
-  width: max-content;
+  min-width: fit-content;
   margin-left: auto;
   margin-right: 10px;
 }
