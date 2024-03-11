@@ -3,10 +3,9 @@ import TagsInput from "../TagsInput/TagsInput";
 import ActionInput from "../ActionInput/ActionInput";
 import {SubmitJournal} from "../SubmitJournal/SubmitJournal";
 import {useJournal} from "../../contexts/JournalContext";
-import {JournalModel} from "../../../Shared/models/JournalModel";
-import { FormEvent } from "react";
+import {FormEvent} from "react";
 
-export default function JournalForm(){
+export default function JournalForm() {
   const {resetEntry, journalEntry} = useJournal();
 
   async function saveJournal(event: FormEvent<HTMLFormElement>) {
@@ -17,11 +16,10 @@ export default function JournalForm(){
     const result: boolean = await window.electron.ipcRenderer.saveJournal(journalAsJsonString);
 
     // TODO: inform user on failure + reason
-    if (result){
+    if (result) {
       console.log(`Journal submitted at ${journalEntry.filePath}`);
       resetEntry();
-    }
-    else {
+    } else {
       console.error(`Journal could not be saved at ${journalEntry.filePath}`);
     }
 
@@ -34,12 +32,12 @@ export default function JournalForm(){
 
   return (
 
-      <form onSubmit={ saveJournal} onReset={() => handleFormReset()}>
-        <TextAreaInput/>
-        <TagsInput/>
-        <ActionInput/>
-        <SubmitJournal/>
-      </form>
+    <form onSubmit={saveJournal} onReset={() => handleFormReset()}>
+      <TextAreaInput/>
+      <TagsInput/>
+      <ActionInput/>
+      <SubmitJournal/>
+    </form>
 
 
   );

@@ -1,6 +1,6 @@
-import {createContext, Dispatch, ReactNode, useCallback, useContext, useState} from 'react';
+import {createContext, ReactNode, useContext, useState} from 'react';
 import {JournalModel} from "../../Shared/models/JournalModel";
-import { JournalContextType } from '../types/JournalContextType';
+import {JournalContextType} from '../types/JournalContextType';
 import {JSONValue} from "../../Shared/types/Json";
 
 interface IProps {
@@ -24,7 +24,7 @@ function useJournal(): JournalContextType {
   return context;
 }
 
-function JournalProvider({children}: IProps ) {
+function JournalProvider({children}: IProps) {
   const [journalEntry, setJournalEntry] = useState<JournalModel>(initialState);
 
   function getJournalModel(): JournalModel {
@@ -48,9 +48,10 @@ function JournalProvider({children}: IProps ) {
     }));
   }
 
-  function resetEntry(): void{
+  function resetEntry(): void {
     setJournalEntry(initialState);
   }
+
   // TODO: Fix
   function updateActions(key: string, value: JSONValue): void {
     setJournalEntry(prevState => ({
@@ -63,10 +64,11 @@ function JournalProvider({children}: IProps ) {
   }
 
   return (
-    <JournalContext.Provider value={{journalEntry, getJournalModel, updateText, updateMetaData, updateActions, resetEntry}}>
+    <JournalContext.Provider
+      value={{journalEntry, getJournalModel, updateText, updateMetaData, updateActions, resetEntry}}>
       {children}
     </JournalContext.Provider>
   );
 }
 
-export{useJournal, JournalProvider}
+export {useJournal, JournalProvider}

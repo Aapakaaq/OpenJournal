@@ -1,4 +1,4 @@
-import {ChangeEvent, useEffect, useState } from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 import "./TagsInput.css"
 import {useJournal} from "../../contexts/JournalContext";
 
@@ -43,7 +43,7 @@ export default function TagsInput() {
       return;
     }
     // Remove tag - isKeyReleased prevents unwanted deletes when holding down Backspace
-    const isInputEmptyAndTagsPresent: boolean = input.length== 0 && tags.length > 0;
+    const isInputEmptyAndTagsPresent: boolean = input.length == 0 && tags.length > 0;
     if (key === "Backspace" && isInputEmptyAndTagsPresent && isKeyReleased) {
       event.preventDefault();
       const tagsCopy = [...tags];
@@ -57,6 +57,7 @@ export default function TagsInput() {
     }
   }
 
+  // @ts-ignore
   function moveToNextFormElement(event: KeyboardEvent<HTMLInputElement>) {
     const form = event.target.form;
     const index = Array.prototype.indexOf.call(form, event.target);
@@ -70,7 +71,7 @@ export default function TagsInput() {
   }
 
   function onChangeHandler(event: ChangeEvent<HTMLInputElement>): void {
-    const value  = event.target.value;
+    const value = event.target.value;
     setInput(value);
   }
 
@@ -87,20 +88,20 @@ export default function TagsInput() {
   }
 
   // @ts-ignore
-  function onFocusHandler(event: FocusEvent<HTMLInputElement>): void{
+  function onFocusHandler(event: FocusEvent<HTMLInputElement>): void {
 
     event.target.placeholder = ""
   }
 
   // @ts-ignore
-  function onBlurHandler(event: FocusEvent<HTMLInputElement>): void{
+  function onBlurHandler(event: FocusEvent<HTMLInputElement>): void {
     event.target.placeholder = placeHolderText;
   }
 
 
-  function renderTags(){
+  function renderTags() {
     const values: string[] = journalEntry.metaData[fieldKey] as string[];
-    if(!values) return;
+    if (!values) return;
     console.log(values);
 
     return values.map(createTags);

@@ -1,6 +1,6 @@
 import './TextAreaInput.css'
 import {useJournal} from "../../contexts/JournalContext";
-import {ChangeEvent, useEffect, useState } from 'react';
+import {ChangeEvent, useState} from 'react';
 
 export default function TextAreaInput() {
   const {updateText, journalEntry} = useJournal();

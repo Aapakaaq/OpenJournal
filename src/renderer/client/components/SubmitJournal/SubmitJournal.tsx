@@ -12,10 +12,9 @@ export function SubmitJournal() {
     const result = await window.electron.ipcRenderer.saveJournal(journalAsJsonString);
 
     // TODO: inform user on failure + reason
-    if (result){
+    if (result) {
       console.log(`Journal submitted at ${getJournalModel().filePath}`);
-    }
-    else {
+    } else {
       console.error(`Journal could not be saved at ${getJournalModel().filePath}`);
     }
   }

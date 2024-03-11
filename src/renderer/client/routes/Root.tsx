@@ -1,7 +1,7 @@
 import {Outlet} from "react-router-dom";
 import {NavigationBar} from "../components/NavigationBar";
 import './Root.css'
-import { JournalProvider } from "../contexts/JournalContext";
+import {JournalProvider} from "../contexts/JournalContext";
 
 export default function Root() {
   return (
@@ -9,7 +9,7 @@ export default function Root() {
       <NavigationBar/>
       <div className="content">
         <JournalProvider>
-        <Outlet/>
+          <Outlet/>
         </JournalProvider>
       </div>
     </>
