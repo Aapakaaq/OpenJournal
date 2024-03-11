@@ -14,7 +14,6 @@ export function SubmitJournal() {
     // TODO: inform user on failure + reason
     if (result){
       console.log(`Journal submitted at ${getJournalModel().filePath}`);
-      resetJournal();
     }
     else {
       console.error(`Journal could not be saved at ${getJournalModel().filePath}`);
