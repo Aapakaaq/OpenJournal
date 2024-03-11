@@ -1,0 +1,42 @@
+.action-input-container {
+  width: 100%;
+  max-width: 100%;
+}
+
+.action-form {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+}
+
+.action-form input {
+  border: 1px grey solid;
+  border-radius: 5px;
+  padding: 14px;
+}
+
+.action {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+
+.action button {
+}
+
+.action .key  {
+  padding-left: 14px;
+  flex: 1;
+  margin-right: 45px;
+  word-break: break-word;
+  flex-wrap: wrap;
+}
+
+.action .due-date {
+
+  width: max-content;
+  margin-left: auto;
+  margin-right: 10px;
+}

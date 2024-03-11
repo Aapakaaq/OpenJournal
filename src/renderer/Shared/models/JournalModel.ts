@@ -11,7 +11,9 @@ type JournalModel = {
 }
 
 type Actions = {
-  [key in keyof string]: JSONValue
+  [action: string]: {
+    dueDate: string,
+  }
 }
 
 
@@ -20,7 +22,7 @@ function journalMapToModel(jsonObject: JSONObject): JournalModel {
   const filePath: string = jsonObject['filePath'] as string;
   const metaData: MetaData = jsonObject['metaData'] as MetaData;
   const textContent: string = jsonObject['textContent'] as string;
-  const actions: Actions = jsonObject['actions'] as Actions;
+  const actions: Actions | null = jsonObject['actions'] as Actions;
   const journalModel: JournalModel = {
     filePath: filePath,
     metaData: metaData,

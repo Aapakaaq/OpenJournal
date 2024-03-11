@@ -5,4 +5,5 @@ export type JournalContextType = {
   getJournalModel(): JournalModel;
   updateText(text: string): void;
   updateMetaData(key: string, value: JSONValue): void;
+  updateActions(key: string, value: JSONValue): void;
 }

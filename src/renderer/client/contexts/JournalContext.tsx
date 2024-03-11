@@ -46,10 +46,20 @@ function JournalProvider({children}: IProps ) {
         [key]: value,
       },
     }));
+  }22
+
+  function updateActions(key: string, value: JSONValue): void {
+    setJournalModel(prevState => ({
+      ...prevState,
+      actions: {
+        ...prevState.actions,
+        [key]: value,
+      }
+    }));
   }
 
   return (
-    <JournalContext.Provider value={{ getJournalModel, updateText, updateMetaData}}>
+    <JournalContext.Provider value={{ getJournalModel, updateText, updateMetaData, updateActions}}>
       {children}
     </JournalContext.Provider>
   );
