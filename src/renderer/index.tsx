@@ -1,13 +1,20 @@
 import { createRoot } from 'react-dom/client';
-import { createHashRouter, RouterProvider } from 'react-router-dom';
-import ReviewPage from './pages/ReviewPage';
-import NotFoundPage from './pages/NotFoundPage';
-import Root from './routes/Root'
-import SettingsPage from './pages/Settings';
-import WritePage from './pages/WritePage/WritePage';
+import { createHashRouter, Navigate, RouterProvider } from 'react-router-dom';
+import ReviewPage from './client/pages/ReviewPage';
+import NotFoundPage from './client/pages/NotFoundPage';
+import Root from './client/routes/Root'
+import SettingsPage from './client/pages/Settings';
+import WritePage from './client/pages/WritePage/WritePage';
+
+if (process.env.NODE_ENV === 'production') {
+  console.log = () => {}
+  console.error = () => {}
+  console.debug = () => {}
+}
+
 const container = document.getElementById('root') as HTMLElement;
 const root = createRoot(container);
-
+const defaultRoute: string = "/write";
 const router = createHashRouter([
   {
     path: '/',
@@ -15,8 +22,13 @@ const router = createHashRouter([
     errorElement: <NotFoundPage />,
     children: [
       {
+        index: true,
+        element: <Navigate to={defaultRoute} replace />
+      },
+      {
         path: '/write',
-        element: <WritePage />
+        element: <WritePage />,
+
       },
       {
         path: '/review',
@@ -32,9 +44,11 @@ const router = createHashRouter([
 
 root.render(<RouterProvider router={router}/>);
 
+/*
 // calling IPC exposed from preload script
 window.electron.ipcRenderer.once('ipc-example', (arg) => {
   // eslint-disable-next-line no-console
   console.log(arg);
 });
 window.electron.ipcRenderer.sendMessage('ipc-example', ['ping']);
+*/

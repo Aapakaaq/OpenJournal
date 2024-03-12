@@ -1,0 +1,10 @@
+.write-page-container {
+  width: 100%;
+  max-width: 100%;
+}
+
+.title {
+  font-size: 20px;
+  font-style: italic;
+  color: #B2BEB5;
+}

@@ -1,0 +1,13 @@
+.content {
+  width: 70%;
+  max-width: 70%;
+  margin: 0 auto;
+
+
+  font-family: 'Open Sans', serif;
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}

@@ -1,0 +1,25 @@
+.navigation-bar {
+  margin-top: 50px;
+  margin-bottom: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navigation-bar a {
+  display: flex;
+  align-items: center;
+  padding-right: 15px;
+  height: 100%;
+  text-decoration: none;
+  opacity: 55%;
+  font-size: 20px;
+  font-family: 'Open Sans', serif;
+}
+
+.link {
+  color: #4d4d5a;
+}
+
+.link-active {
+}
