@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import { createHashRouter, RouterProvider } from 'react-router-dom';
+import { createHashRouter, Navigate, RouterProvider } from 'react-router-dom';
 import ReviewPage from './client/pages/ReviewPage';
 import NotFoundPage from './client/pages/NotFoundPage';
 import Root from './client/routes/Root'
@@ -14,7 +14,7 @@ if (process.env.NODE_ENV === 'production') {
 
 const container = document.getElementById('root') as HTMLElement;
 const root = createRoot(container);
-
+const defaultRoute: string = "/write";
 const router = createHashRouter([
   {
     path: '/',
@@ -22,8 +22,13 @@ const router = createHashRouter([
     errorElement: <NotFoundPage />,
     children: [
       {
+        index: true,
+        element: <Navigate to={defaultRoute} replace />
+      },
+      {
         path: '/write',
-        element: <WritePage />
+        element: <WritePage />,
+
       },
       {
         path: '/review',
