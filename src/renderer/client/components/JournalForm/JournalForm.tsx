@@ -4,7 +4,7 @@ import ActionInput from "../ActionInput/ActionInput";
 import {SubmitJournal} from "../SubmitJournal/SubmitJournal";
 import {useJournal} from "../../contexts/JournalContext";
 import {FormEvent} from "react";
-
+import './JournalForm.css'
 export default function JournalForm() {
   const {resetEntry, journalEntry} = useJournal();
 
@@ -22,7 +22,6 @@ export default function JournalForm() {
     } else {
       console.error(`Journal could not be saved at ${journalEntry.filePath}`);
     }
-
   }
 
   function handleFormReset(): void {

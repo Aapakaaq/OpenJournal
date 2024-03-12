@@ -63,9 +63,21 @@ function JournalProvider({children}: IProps) {
     }));
   }
 
+  function removeAction(keyToRemove: string): void {
+    if (!journalEntry.actions || !journalEntry.actions[keyToRemove]) return;
+
+    const updatedActions = { ...journalEntry.actions };
+    delete updatedActions[keyToRemove];
+    setJournalEntry((prevEntry) => ({
+      ...prevEntry,
+      actions: updatedActions,
+    }));
+
+  }
+
   return (
     <JournalContext.Provider
-      value={{journalEntry, updateText, updateMetaData, updateActions, resetEntry}}>
+      value={{journalEntry, removeAction, updateText, updateMetaData, updateActions, resetEntry}}>
       {children}
     </JournalContext.Provider>
   );

@@ -11,7 +11,7 @@ export default function ActionInput() {
   const inputRefs: RefObject<HTMLInputElement>[] = [actionKeyRef, actionDateRef];
   const [fieldIntIndex, setFieldIntIndex] = useState<number>(0);
 
-  const {updateActions} = useJournal();
+  const {updateActions, removeAction} = useJournal();
   const {journalEntry} = useJournal()
   const [newActionKey, setNewActionKey] = useState<string>('');
 
@@ -88,9 +88,7 @@ export default function ActionInput() {
           dueDate: actionDate
         }
       }
-
       updateActions(newActionKey, {due: actionDate});
-
       resetAction();
       event.preventDefault();
       moveToNextInput();
@@ -102,11 +100,10 @@ export default function ActionInput() {
     const newActions: Actions = {};
     // @ts-ignore
     Object.entries(journalEntry.actions)
-      .filter((action: [string, { dueDate: string }], i: number): boolean => i !== index)
+      .filter((action: [string, { dueDate: string }], i: number): boolean => i === index)
       .forEach(([key, value]) => {
-        updateActions(key, value)
+        removeAction(key);
       });
-
 
     event.preventDefault();
   }
