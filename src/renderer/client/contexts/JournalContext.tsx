@@ -39,6 +39,8 @@ function JournalProvider({children}: IProps) {
   }
 
   function updateMetaData(key: string, value: JSONValue): void {
+    console.log(`updateMetaData: key: ${key} value: ${value}`);
+    console.log(journalEntry.metaData);
     setJournalEntry(prevState => ({
       ...prevState,
       metaData: {

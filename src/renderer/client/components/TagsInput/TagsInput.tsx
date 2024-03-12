@@ -5,15 +5,14 @@ import {useJournal} from "../../contexts/JournalContext";
 export default function TagsInput() {
   const {updateMetaData, journalEntry} = useJournal()
   const fieldKey: string = 'tags';
-  let tags: string[] = [];
+  let tags: string[] = journalEntry.metaData[fieldKey] as string[];
 
   useEffect(() => {
     console.log("TagsInput mounted");
     if (!journalEntry.metaData[fieldKey]) {
       console.log(`adding the field ${fieldKey}  to metaData`);
-      updateMetaData(fieldKey, '');
+      updateMetaData(fieldKey, []);
     }
-    tags = journalEntry.metaData[fieldKey] as string[];
   }, []);
 
   const [input, setInput] = useState('');
@@ -27,7 +26,7 @@ export default function TagsInput() {
     if (tags.includes(tag)) return;
 
     const newValue = [...tags, tag];
-
+    console.log(`addTag newValue: ${newValue}`);
     setInput('');
     updateMetaData(fieldKey, newValue);
   }
@@ -113,8 +112,6 @@ export default function TagsInput() {
   function renderTags() {
     const values: string[] = journalEntry.metaData[fieldKey] as string[];
     if (!values) return;
-    console.log(values);
-
     return values.map(createTags);
   }
 
