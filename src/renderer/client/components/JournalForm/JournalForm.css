@@ -3,3 +3,10 @@ form * {
   box-shadow: none;
 }
 
+form > * {
+  margin-top: 35px;
+}
+
+.buttons-container {
+  margin-top: 45px;
+}

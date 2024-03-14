@@ -1,12 +1,14 @@
 .tags-container {
   display: flex;
-  overflow-x: auto;
+
   width: 100%;
   max-width: 100%;
   border: 1px grey solid;
   border-radius: 5px;
   color: gray;
-  margin-bottom: 10px;
+  overflow-x: auto;
+  overflow-y: auto;
+
 }
 
 .tags-input {

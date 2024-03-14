@@ -14,7 +14,7 @@ export default function TextAreaInput() {
   return (
     // TODO: Add spellCheck to settings
     <div className={"textArea-container"}>
-      <textarea className="journal-input"
+      <textarea className="entry-input"
                 placeholder={'Enter text'}
                 spellCheck='true'
                 value={journalEntry.textContent}

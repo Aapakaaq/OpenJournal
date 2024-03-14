@@ -23,16 +23,19 @@ export default function ActionInput() {
 
   function createActions() {
     if (!journalEntry.actions) return;
+
+
     // @ts-ignore
     return (
       <div className={'actions'}>
-        {Object.entries(journalEntry.actions).map(([key, value], index: number) => (
+        {Object.entries(journalEntry.actions).map(([key, action], index: number) => (
+
             <div className={'action'}>
               <div className={'key'}>
                 {key}
               </div>
               <div className={'due-date'}>
-                {value.dueDate}
+                {action[key].dueDate}
               </div>
               <button onClick={event => deleteAction(event, index)}>x</button>
             </div>
@@ -85,10 +88,11 @@ export default function ActionInput() {
     if (event.key === "Enter") {
       const newAction: Actions = {
         [newActionKey]: {
-          dueDate: actionDate
+          dueDate: actionDate,
+          isCompleted: false
         }
       }
-      updateActions(newActionKey, {due: actionDate});
+      updateActions(newActionKey, newAction);
       resetAction();
       event.preventDefault();
       moveToNextInput();
@@ -100,7 +104,7 @@ export default function ActionInput() {
     const newActions: Actions = {};
     // @ts-ignore
     Object.entries(journalEntry.actions)
-      .filter((action: [string, { dueDate: string }], i: number): boolean => i === index)
+      .filter((action, i: number): boolean => i === index)
       .forEach(([key, value]) => {
         removeAction(key);
       });

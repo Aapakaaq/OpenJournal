@@ -1,6 +1,4 @@
-
-.submit-button {
-  float: left;
+.reset-button {
   max-width: 45%;
   width: 45%;
   border-radius: 5px;
@@ -8,4 +6,5 @@
   cursor: pointer;
   font-size: 25px;
   color: #4d4d5a;
+  float:right;
 }

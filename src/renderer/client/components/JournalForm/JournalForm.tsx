@@ -5,6 +5,7 @@ import {SubmitJournal} from "../SubmitJournal/SubmitJournal";
 import {useJournal} from "../../contexts/JournalContext";
 import {FormEvent} from "react";
 import './JournalForm.css'
+import {ResetEntry} from "../ResetEntry/ResetEntry";
 export default function JournalForm() {
   const {resetEntry, journalEntry} = useJournal();
 
@@ -35,7 +36,10 @@ export default function JournalForm() {
       <TextAreaInput/>
       <TagsInput/>
       <ActionInput/>
+      <div className={"buttons-container"}>
       <SubmitJournal/>
+        <ResetEntry/>
+      </div>
     </form>
 
 

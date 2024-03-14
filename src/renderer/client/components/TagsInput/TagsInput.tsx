@@ -5,7 +5,7 @@ import {useJournal} from "../../contexts/JournalContext";
 export default function TagsInput() {
   const {updateMetaData, journalEntry} = useJournal()
   const fieldKey: string = 'tags';
-  let tags: string[] = journalEntry.metaData[fieldKey] as string[];
+  let tags: string[] = journalEntry.metaData[fieldKey] as string[] ?? [];
 
   useEffect(() => {
     console.log("TagsInput mounted");
@@ -13,6 +13,7 @@ export default function TagsInput() {
       console.log(`adding the field ${fieldKey}  to metaData`);
       updateMetaData(fieldKey, []);
     }
+
   }, []);
 
   const [input, setInput] = useState('');
