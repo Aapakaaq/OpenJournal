@@ -14,11 +14,10 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import {SAVE_JOURNAL_DISK} from "./Processes/ProcessTypes";
-import {IJournalService} from "../renderer/server/services/IJournalService";
-import {serviceCollection} from "../renderer/inversify.config";
-import {ServiceTypes} from "../renderer/server/ServiceTypes";
-
+import { SAVE_JOURNAL_DISK } from './Processes/ProcessTypes';
+import { IJournalService } from '../renderer/server/services/IJournalService';
+import { serviceCollection } from '../renderer/inversify.config';
+import { ServiceTypes } from '../renderer/server/ServiceTypes';
 
 class AppUpdater {
   constructor() {
@@ -36,16 +35,19 @@ ipcMain.on('ipc-example', async (event, arg) => {
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
-const journalService: IJournalService = serviceCollection.get<IJournalService>(ServiceTypes.IJournalService);
+const journalService: IJournalService = serviceCollection.get<IJournalService>(
+  ServiceTypes.IJournalService,
+);
 ipcMain.handle(SAVE_JOURNAL_DISK, async (_, jsonString) => {
   console.log(`From main: ${jsonString}`);
-  if (!jsonString){
+  if (!jsonString) {
     return;
   }
 
-  const isWritten: boolean = await journalService.saveJournalJONString(jsonString);
+  const isWritten: boolean =
+    await journalService.saveJournalJONString(jsonString);
   return isWritten;
-})
+});
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
