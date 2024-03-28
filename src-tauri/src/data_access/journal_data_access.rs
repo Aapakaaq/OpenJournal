@@ -1,20 +1,21 @@
 use std::rc::Rc;
 use rusqlite::{CachedStatement, Connection, params, Savepoint, Statement};
 use rusqlite::types::Value;
+use crate::dtos::journal_dto::{JournalActionDTO, JournalDTO};
 
 use crate::models::journal::Journal;
 use crate::models::journal_action::JournalAction;
 use crate::models::journal_entry::JournalEntry;
 use crate::models::tag::Tag;
 
-pub fn add_journal(conn: &mut Connection, journal: &Journal) -> Result<i32, ()> {
+pub fn add_journal(conn: &mut Connection, journal: &JournalDTO) -> Result<i64, ()> {
 
     let save_point: Savepoint = conn.savepoint().unwrap();
 
-    let journal_id: i32 = add_entry(&save_point, &journal.entry).unwrap();
-    add_tags(&save_point, &journal.tags).unwrap();
-    add_entry_tags(&save_point, &journal_id, &journal.tags).unwrap();
-    add_actions(&save_point, &journal.actions).unwrap();
+    let journal_id: i64 = add_entry(&save_point, &journal.content).unwrap();
+    let tag_ids: Vec<usize> = add_tags(&save_point, &journal.tags).unwrap();
+    add_entry_tags(&save_point, &journal_id, &tag_ids).unwrap();
+    add_actions(&save_point, &journal.actions, journal_id).unwrap();
 
     save_point.commit().unwrap();
 
@@ -98,31 +99,34 @@ pub fn get_all_journals(conn: &mut Connection) -> Result<Option<Vec<Journal>>, (
     Ok(Some(journals))
 }
 
-fn add_tags(save_point: &Savepoint, tags: &Vec<Tag>) -> Result<(), ()> {
+fn add_tags(save_point: &Savepoint, tags: &Vec<String>) -> Result<Vec<usize>, ()> {
+    let mut ids: Vec<usize> = Vec::new();
     for tag in tags {
-        save_point.execute(
+        let id: usize = save_point.execute(
             "INSERT INTO tags (name) VALUES (?)",
-            params![&tag.name],
+            params![&tag],
         ).expect("Failed to insert tag");
+
+        ids.push(id);
     }
 
-    Ok(())
+    Ok(ids)
 }
 
-fn add_entry_tags(save_point: &Savepoint, entry_id: &i32, tags: &Vec<Tag>) -> Result<(), ()> {
+fn add_entry_tags(save_point: &Savepoint, entry_id: &i64, tags_id: &Vec<usize>) -> Result<(), ()> {
     let mut cached_statement: CachedStatement =
         save_point.prepare_cached("INSERT INTO entry_tags (entry_id, tag_id) VALUES (?, ?)")
             .expect("Failed to prepare statement");
 
-    for tag in tags {
-        cached_statement.execute(params![&entry_id, &tag.id])
+    for tag_id in tags_id {
+        cached_statement.execute(params![&entry_id, &tag_id])
             .expect("Failed to insert entry_tag");
     }
 
     Ok(())
 }
 
-fn add_actions(save_point: &Savepoint, actions: &Vec<JournalAction>) -> Result<(), ()> {
+fn add_actions(save_point: &Savepoint, actions: &Vec<JournalActionDTO>, journal_id: i64) -> Result<(), ()> {
     let mut cached_statement: CachedStatement =
         save_point.prepare_cached("INSERT INTO actions \
                                     (entry_id, description, due_date, completed, completed_at) \
@@ -133,16 +137,15 @@ fn add_actions(save_point: &Savepoint, actions: &Vec<JournalAction>) -> Result<(
             Some(date) => date.to_string(),
             None => "".to_string(),
         };
-        let completed_at = match &action.completed_at {
-            Some(date) => date.to_string(),
-            None => "".to_string(),
-        };
+        let is_completed: bool = false;
+        let completed_at: String = "".to_string();
+
         cached_statement.execute(
             rusqlite::params![
-                &action.entry_id,
+                &journal_id,
                 &action.description,
                 due_date,
-                &action.completed,
+                &is_completed,
                 completed_at]
         ).expect("Failed to insert action");
     }
@@ -150,11 +153,11 @@ fn add_actions(save_point: &Savepoint, actions: &Vec<JournalAction>) -> Result<(
     Ok(())
 }
 
-fn add_entry(save_point: &Savepoint, entry: &JournalEntry) -> Result<i32, ()> {
+fn add_entry(save_point: &Savepoint, content: &str) -> Result<i64, ()> {
     save_point.execute(
-        "INSERT INTO entries (content, created_at) VALUES (?, ?)",
-        params![&entry.content, &entry.created_at],
+        "INSERT INTO entries (content) VALUES (?)",
+        params![&content],
     ).expect("Failed to insert entry");
 
-    Ok(save_point.last_insert_rowid() as i32)
+    Ok(save_point.last_insert_rowid())
 }

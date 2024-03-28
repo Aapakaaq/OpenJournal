@@ -1,5 +1,4 @@
 import './SubmitJournal.css'
-import {useJournal} from "../../contexts/JournalContext";
 
 
 export function SubmitJournal() {

@@ -6,10 +6,9 @@ export default function TextAreaInput() {
 
 
   function handleChange(event: ChangeEvent<HTMLTextAreaElement>) {
-
-    event.preventDefault();
     const value: string = event.target.value;
     updateText(value);
+    event.preventDefault();
   }
 
   return (
@@ -18,7 +17,7 @@ export default function TextAreaInput() {
       <textarea className="entry-input"
                 placeholder={'Enter text'}
                 spellCheck='true'
-                value={journalEntry.textContent}
+                value={journalEntry.content}
                 onChange={handleChange}
       />
     </div>

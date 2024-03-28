@@ -1,45 +1,35 @@
-import {ChangeEvent, useEffect, useState} from "react";
+import React, {ChangeEvent, useState} from "react";
 import "./TagsInput.css"
 import {useJournal} from "../../contexts/JournalContext";
 
 export default function TagsInput() {
-  const {updateMetaData, journalEntry} = useJournal()
-  const fieldKey: string = 'tags';
-  let tags: string[] = journalEntry.metaData[fieldKey] as string[] ?? [];
-
-  useEffect(() => {
-    console.log("TagsInput mounted");
-    if (!journalEntry.metaData[fieldKey]) {
-      console.log(`adding the field ${fieldKey}  to metaData`);
-      updateMetaData(fieldKey, []);
-    }
-
-  }, []);
+  const {updateTags, journalEntry} = useJournal()
+  let tags: string[] = journalEntry.tags;
 
   const [input, setInput] = useState('');
   const [isKeyReleased, setIsKeyReleased] = useState(false);
 
-  const tagSeperationKey: string = ',';
+  const tagSeparationKey: string = ',';
   const placeHolderText: string = 'Enter a tag';
 
 
   function addTag(tag: string){
     if (tags.includes(tag)) return;
 
-    const newValue = [...tags, tag];
+    const newValue: string[] = [...tags, tag];
     console.log(`addTag newValue: ${newValue}`);
     setInput('');
-    updateMetaData(fieldKey, newValue);
+    updateTags(newValue);
   }
 
   // @ts-ignore
   function onKeyDownHandler(event: KeyboardEvent<HTMLInputElement>): void {
     const {key} = event;
-    const trimmedInput = input.trim();
+    const trimmedInput: string = input.trim();
 
     // Add tag
-    const isValidSeperationKey = (key === tagSeperationKey || key === "Enter")
-    if (isValidSeperationKey && trimmedInput.length) {
+    const isValidSeparationKey: boolean = (key === tagSeparationKey || key === "Enter")
+    if (isValidSeparationKey && trimmedInput.length) {
       addTag(trimmedInput);
       event.preventDefault();
     }
@@ -61,7 +51,7 @@ export default function TagsInput() {
       // @ts-ignore
       setInput(poppedTag);
       setIsKeyReleased(false);
-      updateMetaData(fieldKey, tagsCopy);
+      updateTags(tagsCopy)
     }
   }
 
@@ -79,7 +69,7 @@ export default function TagsInput() {
   }
 
   function onChangeHandler(event: ChangeEvent<HTMLInputElement>): void {
-    const value = event.target.value;
+    const value: string = event.target.value;
     setInput(value);
   }
 
@@ -87,16 +77,16 @@ export default function TagsInput() {
     setIsKeyReleased(true);
   }
 
-  function deleteTag(index: number): void {
-    const filteredTags: string[] = tags.filter((tag: string, i: number): boolean =>
+  function deleteTag(event: React.MouseEvent<HTMLButtonElement>, index: number): void {
+    const filteredTags: string[] = tags.filter((_, i: number): boolean =>
       i !== index);
 
-    updateMetaData(fieldKey, filteredTags);
+    updateTags(filteredTags);
+    event.preventDefault();
   }
 
   // @ts-ignore
   function onFocusHandler(event: FocusEvent<HTMLInputElement>): void {
-
     event.target.placeholder = ""
   }
 
@@ -111,7 +101,7 @@ export default function TagsInput() {
 
 
   function renderTags() {
-    const values: string[] = journalEntry.metaData[fieldKey] as string[];
+    const values: string[] = journalEntry.tags;
     if (!values) return;
     return values.map(createTags);
   }
@@ -120,7 +110,7 @@ export default function TagsInput() {
     return (
       <div className="tag">
         {tag}
-        <button onClick={() => deleteTag(index)}>x</button>
+        <button onClick={(event) => deleteTag(event, index)}>x</button>
       </div>
     );
   }

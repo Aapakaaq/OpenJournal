@@ -6,23 +6,22 @@ import {useJournal} from "../../contexts/JournalContext";
 import {FormEvent} from "react";
 import './JournalForm.css'
 import {ResetEntry} from "../ResetEntry/ResetEntry";
-import {invoke} from "@tauri-apps/api/tauri";
+import { invoke } from '@tauri-apps/api/tauri';
 export default function JournalForm() {
   const {resetEntry, journalEntry} = useJournal();
 
   async function saveJournal(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    console.log("Submitting journal...")
     const journalAsJsonString: string = JSON.stringify(journalEntry)
     console.log(journalAsJsonString);
-    const result: string = await invoke("write_journal", {journal: journalAsJsonString})
+    const result: string = await invoke("add_journal", {journalJson: journalAsJsonString})
 
     // TODO: inform user on failure + reason
     if (result) {
-      console.log(`Journal submitted at ${journalEntry.filePath}`);
+      console.log(`Journal submitted `);
       resetEntry();
     } else {
-      console.error(`Journal could not be saved at ${journalEntry.filePath}`);
+      console.error(`Journal could not be submitted`);
     }
   }
 

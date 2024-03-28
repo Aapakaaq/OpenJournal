@@ -7,6 +7,7 @@ export function ResetEntry() {
   // @ts-ignore
   function onClickHandler(event: MouseEvent<HTMLButtonElement>): void {
     resetEntry();
+    event.preventDefault();
   }
   return (
     <div className="container">

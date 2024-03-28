@@ -16,15 +16,6 @@ pub struct Journal {
 // TODO: Consider creating a macro to get the field names of the structs and
 // use that to create the SQL statements
 impl Journal {
-
-    // TODO: Improve this
-    pub fn is_valid(&self) -> bool {
-        if (self.entry.content.trim().is_empty()) {
-            return false;
-        }
-
-        true
-    }
     /// Note: This function is tightly coupled to the table definition and column names
     pub fn create_from_row(row: &Row) -> Result<Journal, Box<dyn std::error::Error>> {
         let column_name = "entry_created_at";

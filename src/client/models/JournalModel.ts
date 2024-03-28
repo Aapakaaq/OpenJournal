@@ -1,34 +1,30 @@
-import {JSONObject, JSONValue} from "../types/Json.ts";
+import {JSONObject} from "../types/Json.ts";
 
+export type JournalAction = {
+  description: string,
+  dueDate?: string,
+}
 
-type MetaData = { [key: string]: JSONValue}
-
-type JournalModel = {
-  textContent: string,
-  actions?: Actions,
+export type JournalModel = {
+  content: string,
   tags: string[],
+  actions: JournalAction[],
+  createdAt?: string
 }
 
-type Actions = {
-  [action: string]: {
-    dueDate: string,
-  }
-}
-
-
-// TODO: validation check3
-function journalMapToModel(jsonObject: JSONObject): JournalModel {
+// TODO: validation check
+export function journalMapToModel(jsonObject: JSONObject): JournalModel {
   const tags: string[] = jsonObject['tags'] as string[];
-  const textContent: string = jsonObject['textContent'] as string;
-  const actions: Actions | null = jsonObject['actions'] as Actions;
+  const textContent: string = jsonObject['content'] as string;
+  const createdAt: string = jsonObject['createdAt'] as string;
+  const actions: JournalAction[] | null  = jsonObject['actions'] as JournalAction[];
+
   const journalModel: JournalModel = {
     tags: tags,
-    textContent: textContent,
-    actions: actions
+    content: textContent,
+    actions: actions,
+    createdAt: createdAt
   };
 
   return journalModel;
 }
-
-
-export {journalMapToModel, MetaData, JournalModel, Actions}

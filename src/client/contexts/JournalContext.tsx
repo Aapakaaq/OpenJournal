@@ -1,7 +1,6 @@
 import {createContext, ReactNode, useContext, useState} from 'react';
-import {JournalModel} from "../models/JournalModel";
+import { JournalAction, JournalModel } from '../models/JournalModel';
 import {JournalContextType} from '../types/JournalContextType';
-import {JSONValue} from "../types/Json.ts";
 
 interface IProps {
   children: ReactNode;
@@ -9,9 +8,9 @@ interface IProps {
 
 const initialState: JournalModel = {
   // TODO: SHOULD BE SET ON ONBOARDING. TMP FOR DEVELOPMENT
-  filePath: '/tmp/test.json',
-  metaData: {},
-  textContent: '',
+  content: '',
+  actions: [],
+  tags: [],
 }
 
 const JournalContext = createContext<JournalContextType | null>(null);
@@ -27,26 +26,17 @@ function useJournal(): JournalContextType {
 function JournalProvider({children}: IProps) {
   const [journalEntry, setJournalEntry] = useState<JournalModel>(initialState);
 
-  function getJournalModel(): JournalModel {
-    return journalEntry
-  }
-
   function updateText(text: string): void {
     setJournalEntry(prevState => ({
       ...prevState,
-      textContent: text
+      content: text
     }));
   }
 
-  function updateMetaData(key: string, value: JSONValue): void {
-    console.log(`updateMetaData: key: ${key} value: ${value}`);
-    console.log(journalEntry.metaData);
+  function updateTags(newTags: string[]): void {
     setJournalEntry(prevState => ({
       ...prevState,
-      metaData: {
-        ...prevState.metaData,
-        [key]: value,
-      },
+      tags: newTags,
     }));
   }
 
@@ -55,31 +45,17 @@ function JournalProvider({children}: IProps) {
   }
 
   // TODO: Fix
-  function updateActions(key: string, value: JSONValue): void {
+  function updateActions(newActions: JournalAction[]): void {
     setJournalEntry(prevState => ({
       ...prevState,
-      actions: {
-        ...prevState.actions,
-        [key]: value,
-      }
+      actions: newActions
     }));
   }
 
-  function removeAction(keyToRemove: string): void {
-    if (!journalEntry.actions || !journalEntry.actions[keyToRemove]) return;
-
-    const updatedActions = { ...journalEntry.actions };
-    delete updatedActions[keyToRemove];
-    setJournalEntry((prevEntry) => ({
-      ...prevEntry,
-      actions: updatedActions,
-    }));
-
-  }
 
   return (
     <JournalContext.Provider
-      value={{journalEntry, removeAction, updateText, updateMetaData, updateActions, resetEntry}}>
+      value={{journalEntry, updateText, updateTags: updateTags, updateActions, resetEntry}}>
       {children}
     </JournalContext.Provider>
   );
