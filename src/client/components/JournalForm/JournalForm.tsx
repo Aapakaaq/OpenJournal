@@ -14,10 +14,12 @@ export default function JournalForm() {
     event.preventDefault();
     const journalAsJsonString: string = JSON.stringify(journalEntry)
     console.log(journalAsJsonString);
-    const result: string = await invoke("add_journal", {journalJson: journalAsJsonString})
-
+    const result: string = await invoke(
+      "create_journal",
+      {journalJson: journalAsJsonString, path: './test.json'})
+    console.log(result);
     // TODO: inform user on failure + reason
-    if (result) {
+    if (result == "201") {
       console.log(`Journal submitted `);
       resetEntry();
     } else {

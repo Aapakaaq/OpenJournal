@@ -10,7 +10,7 @@ pub struct SqliteDB {
     database_path: String,
 }
 
-impl Database for SqliteDB{
+impl Database for SqliteDB {
     fn new(database_path: String) -> Self {
         Self {
             database_path: database_path.into(),

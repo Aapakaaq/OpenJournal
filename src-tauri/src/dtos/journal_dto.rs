@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use chrono::NaiveDateTime;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct JournalActionDTO {
@@ -14,7 +13,7 @@ pub struct JournalDTO {
     pub tags: Vec<String>,
 }
 
-impl JournalDTO{
+impl JournalDTO {
     // TODO: Improve this validation
     pub fn is_valid(&self) -> bool {
         if self.content.trim().is_empty() {
