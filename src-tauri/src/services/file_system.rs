@@ -5,7 +5,6 @@ use std::io::prelude::*;
 #[derive(Debug)]
 pub enum FileSystemErr {
     IoError(std::io::Error),
-    EmptyPathError(String),
     EmptyContent,
 }
 
@@ -14,8 +13,6 @@ impl Display for FileSystemErr {
         match self {
             FileSystemErr::EmptyContent =>
                 write!(f, "File cannot is empty"),
-            FileSystemErr::EmptyPathError(message) =>
-                write!(f, "{}", message),
             FileSystemErr::IoError(io_error) =>
                 write!(f, "{}", io_error),
         }
@@ -32,11 +29,7 @@ pub struct DiskFileSystem;
 
 impl FileSystem for DiskFileSystem {
     fn save(&self, path: &str, content: &str) -> Result<(), FileSystemErr> {
-        if (path.trim().is_empty()) {
-            return Err(FileSystemErr::EmptyPathError("Missing save path".to_string()));
-        }
-
-        if (content.trim().is_empty()) {
+         if (content.trim().is_empty()) {
             return Err(FileSystemErr::EmptyContent);
         }
 
@@ -47,7 +40,8 @@ impl FileSystem for DiskFileSystem {
 
         return match file.write_all(content.as_bytes()) {
             Ok(_) => { Ok(()) }
-            Err(err) => { Err(FileSystemErr::IoError(err)) }
+            Err(err) => {
+                Err(FileSystemErr::IoError(err)) }
         };
     }
 }
