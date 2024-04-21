@@ -27,7 +27,6 @@ export default function ActionInput() {
     return (
       <div className={'actions'}>
         {Object.entries(journalEntry.actions).map(([_, action], index: number) => (
-
             <div className={'action'}>
               <div className={'key'}>
                 {action.description}

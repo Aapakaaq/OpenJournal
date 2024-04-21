@@ -11,7 +11,7 @@ edition = "2021"
 tauri-build = { version = "1", features = [] }
 
 [dependencies]
-tauri = { version = "1", features = ["shell-open"] }
+tauri = { version = "1", features = [ "dialog-all", "shell-open"] }
 rusqlite = { version = "0.31.0", features = ["bundled", "vtab", "array"] }
 chrono = "0.4.35"
 http = "1.1.0"

@@ -6,4 +6,7 @@ export type JournalContextType = {
   updateTags( newTags: string[]): void;
   updateActions(newActions: JournalAction[]): void;
   resetEntry(): void;
+  journalFolder: string;
+  createPathFromFolder(path: string): string;
+  updateJournalFolder(newPath: string): void;
 }

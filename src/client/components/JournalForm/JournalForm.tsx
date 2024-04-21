@@ -7,19 +7,21 @@ import {FormEvent} from "react";
 import './JournalForm.css'
 import {ResetEntry} from "../ResetEntry/ResetEntry";
 import { invoke } from '@tauri-apps/api/tauri';
+import { StatusCodes } from 'http-status-codes';
+import { getFormattedTimestamp } from '../../utils/FormattedTimestamp.ts';
 export default function JournalForm() {
-  const {resetEntry, journalEntry} = useJournal();
+  const {resetEntry, journalEntry, createPathFromFolder} = useJournal();
 
   async function saveJournal(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const timestamp: string = getFormattedTimestamp();
+    const fileName: string = timestamp + '.json';
     const journalAsJsonString: string = JSON.stringify(journalEntry)
-    console.log(journalAsJsonString);
-    const result: string = await invoke(
+    const result: number = await invoke(
       "create_journal",
-      {journalJson: journalAsJsonString, path: './test.json'})
-    console.log(result);
-    // TODO: inform user on failure + reason
-    if (result == "201") {
+      {journalJson: journalAsJsonString, path: createPathFromFolder(fileName)})
+    // TODO: Error handling
+    if (result == StatusCodes.CREATED) {
       console.log(`Journal submitted `);
       resetEntry();
     } else {

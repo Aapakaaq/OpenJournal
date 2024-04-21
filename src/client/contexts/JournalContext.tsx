@@ -25,7 +25,19 @@ function useJournal(): JournalContextType {
 
 function JournalProvider({children}: IProps) {
   const [journalEntry, setJournalEntry] = useState<JournalModel>(initialState);
+  const [journalFolder, setjournalFolder] = useState<string>("./journals/");
 
+  // TODO: Refactor
+  function createPathFromFolder(path: string): string {
+    const fullPath: string = journalFolder + '/' + path;
+    return fullPath;
+  }
+
+  function updateJournalFolder(newPath: string): void {
+    if (newPath){
+      setjournalFolder(newPath);
+    }
+  }
   function updateText(text: string): void {
     setJournalEntry(prevState => ({
       ...prevState,
@@ -55,7 +67,7 @@ function JournalProvider({children}: IProps) {
 
   return (
     <JournalContext.Provider
-      value={{journalEntry, updateText, updateTags: updateTags, updateActions, resetEntry}}>
+      value={{journalFolder,createPathFromFolder, updateJournalFolder, journalEntry, updateText, updateTags: updateTags, updateActions, resetEntry}}>
       {children}
     </JournalContext.Provider>
   );

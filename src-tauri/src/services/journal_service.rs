@@ -35,6 +35,7 @@ impl<T: FileSystem> JournalService<T> {
         JournalService { file_system }
     }
 
+    // TODO: What if folder to the path is deleted inbetween calls?
     pub fn create_journal(&self, journal_json: &str, path: &str) -> Result<bool, JournalSystemErr> {
         dbg!("Journal JSON: {}", journal_json);
         if journal_json.trim().is_empty() {
@@ -60,7 +61,9 @@ impl<T: FileSystem> JournalService<T> {
             Ok(_) => { Ok(true) }
             Err(err) => {match err  {
                 FileSystemErr::IoError(err) => {
-                    Err(JournalSystemErr::IoError(err))}
+                    println!("{:?}", err);
+                    Err(JournalSystemErr::IoError(err))
+                }
                 // Unrecoverable error given previous code
                 FileSystemErr::EmptyContent => {panic!("{}", err)}
             }}
