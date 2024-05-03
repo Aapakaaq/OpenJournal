@@ -2,7 +2,8 @@ import {JSONObject} from "../types/Json.ts";
 
 export type JournalAction = {
   description: string,
-  dueDate?: string,
+  completed: boolean,
+  reflection?: string
 }
 
 export type JournalModel = {

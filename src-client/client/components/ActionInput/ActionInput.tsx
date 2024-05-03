@@ -1,40 +1,26 @@
-import {createRef, RefObject, useState} from "react";
+import { createRef, RefObject, useState } from 'react';
 import {useJournal} from "../../contexts/JournalContext";
 import { JournalAction } from '../../models/JournalModel.ts';
 import './ActionInput.css'
-
+import "react-datepicker/dist/react-datepicker.css";
 import "../../Global CSS/OneLineInput.css"
 
-// TODO: Required field + user feedback
-// - Create a form containing all the inputs of write page
 export default function ActionInput() {
   let actionKeyRef: NonNullable<RefObject<HTMLInputElement>> = createRef<HTMLInputElement>();
-  let actionDateRef: NonNullable<RefObject<HTMLInputElement>> = createRef<HTMLInputElement>();
-
-  const inputRefs: RefObject<HTMLInputElement>[] = [actionKeyRef, actionDateRef];
-  const [fieldIntIndex, setFieldIntIndex] = useState<number>(0);
 
   const {updateActions} = useJournal();
   const {journalEntry} = useJournal()
   const [actionDescription, setActionDescription] = useState<string>('');
 
-  // year-month-day
-  const defaultDate = new Date().toISOString().split('T')[0]
-  const [actionDate, setActionDate] = useState(defaultDate)
-
   function createActions() {
     if (!journalEntry.actions) return;
 
-    // @ts-ignore
     return (
       <div className={'actions'}>
         {Object.entries(journalEntry.actions).map(([_, action], index: number) => (
             <div className={'action'}>
               <div className={'key'}>
                 {action.description}
-              </div>
-              <div className={'due-date'}>
-                {action.dueDate}
               </div>
               <button onClick={event => deleteAction(event, index)}>x</button>
             </div>
@@ -55,54 +41,22 @@ export default function ActionInput() {
 
     if (event.key === "Enter") {
       event.preventDefault();
-      moveToNextInput();
-    }
-
-  }
-
-  // @ts-ignore
-  // Moves to the begninning of the form when going out of bound
-  function moveToNextInput() {
-    const nextIndex: number = fieldIntIndex + 1;
-    console.log(nextIndex)
-    if (inputRefs[nextIndex]) {
-      // @ts-ignore
-      inputRefs[nextIndex].current.focus();
-      setFieldIntIndex(nextIndex);
-    } else {
-      setFieldIntIndex(0)
-      // @ts-ignore
-      inputRefs[0].current.focus()
-    }
-  }
-
-  // @ts-ignore
-  function addActions(event: KeyboardEvent<HTMLInputElement>): void {
-    // TODO: Add feedback to user that value is missing
-    if (actionDescription.trim() === '') {
-      console.log("Empty action description")
-      moveToNextInput();
-      event.preventDefault();
-      return;
-    }
-
-    if (event.key === "Enter") {
-      console.log("Adding action")
-      const newAction: JournalAction = {
-        description: actionDescription,
-        dueDate: actionDate,
-
-      }
-      console.log(newAction)
+      const newAction: JournalAction = createJournalAction();
       const newValue: JournalAction[] = [...journalEntry.actions, newAction];
       updateActions(newValue);
-
-      console.log(journalEntry.actions);
-      resetAction();
+      resetAction()
       event.preventDefault();
-      moveToNextInput();
     }
 
+  }
+
+  function createJournalAction(){
+    const newAction: JournalAction = {
+      description: actionDescription,
+      completed: false,
+    }
+
+    return newAction;
   }
 
   // @ts-ignore
@@ -116,25 +70,17 @@ export default function ActionInput() {
 
   function resetAction() {
     setActionDescription('');
-    setActionDate(defaultDate);
   }
 
   return (
     <div className={'action-input-container'}>
       <div className={'action-inputs'}>
-        <input className={'key-input'}
+        <input className={'one-line-input'}
                ref={actionKeyRef}
                placeholder={'Enter action'}
                value={actionDescription}
                onKeyDown={onKeyHandler}
-               onChange={e => setActionDescription(e.target.value)}
-               onFocus={() => setFieldIntIndex(0)}/>
-        <input type="date"
-               ref={actionDateRef}
-               className={'due-input'}
-               defaultValue={actionDate}
-               onKeyDown={addActions}
-               onFocus={() => setFieldIntIndex(1)}/>
+               onChange={e => setActionDescription(e.target.value)} />
       </div>
       {createActions()}
     </div>
