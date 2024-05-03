@@ -1,7 +1,7 @@
 import './SettingsPage.css'
 import { useJournal } from '../../contexts/JournalContext.tsx';
 import {  FormEvent, useState } from 'react';
-import { open } from '@tauri-apps/api/dialog';
+import InputFieldFolder from '../../components/InputFieldFolder/InputFieldFolder.tsx';
 
 export default function SettingsPage() {
   const {journalFolder, updateJournalFolder} = useJournal();
@@ -9,33 +9,20 @@ export default function SettingsPage() {
 
   async function saveSettings(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    // TODO: validation check of path
+    console.log("Saving settings...")
+    console.log(savePath);
     updateJournalFolder(savePath);
-  }
-  async function selectFolder() {
-    const path: string | null = await open({
-      directory: true,
-      multiple: false,
-    }) as string | null;
+    console.log("Settings saved")
 
-    if (path) {
-      // Should never be string[] due to multiple: false
-      setSavePath(path);
-    }
   }
+
 
   return (
     <div className="settings-container">
       <form onSubmit={saveSettings}>
       <div>
-        <label className={"title"}>Save path</label>
-        <input className={'one-line-input'}
-               onFocus={selectFolder}
-               value={savePath}
-               onChange={e => setSavePath(e.target.value)}
-
-
-        />
+        <h1 className={"title"}>Save path</h1>
+        <InputFieldFolder savePath={savePath} setSavePath={setSavePath} />
       </div>
       <button>Save</button>
       </form>

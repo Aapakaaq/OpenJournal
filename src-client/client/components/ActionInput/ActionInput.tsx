@@ -1,7 +1,9 @@
 import {createRef, RefObject, useState} from "react";
 import {useJournal} from "../../contexts/JournalContext";
-import './ActionInput.css'
 import { JournalAction } from '../../models/JournalModel.ts';
+import './ActionInput.css'
+
+import "../../Global CSS/OneLineInput.css"
 
 // TODO: Required field + user feedback
 // - Create a form containing all the inputs of write page
