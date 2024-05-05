@@ -1,7 +1,11 @@
-# Tauri + React + Typescript
+# Open Journal
+An offline first desktop journaling application with emphasis on taking action and reflection on those actions 
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+Currently,  in a very early alpha state. 
 
-## Recommended IDE Setup
+# Planned features
+- Writing what actions you want to take the next 24 hours based on your journal entry
+- Reflect on the actions you have taken
+- Overview of what actions you have completed in the past and which you have skipped / postponed
+- Theme customizations
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
