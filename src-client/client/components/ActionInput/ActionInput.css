@@ -1,0 +1,18 @@
+.action-input-container {
+  width: 100%;
+}
+
+.action {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.action .key {
+  padding-left: 14px;
+  flex: 1;
+  margin-right: 30px;
+  word-break: break-word;
+  flex-wrap: wrap;
+}
+

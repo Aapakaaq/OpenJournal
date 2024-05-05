@@ -1,0 +1,18 @@
+.settings-container {
+    width: 100%;
+    max-width: 100%;
+
+}
+.label {
+    font-size: 18px;
+}
+
+.one-line-input {
+    font-size: 16px;
+    box-shadow: none;
+    border: 1px grey solid;
+    border-radius: 5px;
+    padding: 8px;
+    margin-bottom: 10px;
+    width: 100%;
+}

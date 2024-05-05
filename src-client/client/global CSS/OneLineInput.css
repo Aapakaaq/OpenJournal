@@ -1,0 +1,11 @@
+.one-line-input {
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    border: 1px grey solid;
+    border-radius: 5px;
+
+    overflow-x: auto;
+    overflow-y: auto;
+    padding: 14px;
+}

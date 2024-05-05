@@ -1,0 +1,24 @@
+[package]
+name = "open-journal"
+version = "0.0.0"
+description = "A Tauri App"
+authors = ["you"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[build-dependencies]
+tauri-build = { version = "1", features = [] }
+
+[dependencies]
+tauri = { version = "1", features = [ "dialog-all", "shell-open"] }
+rusqlite = { version = "0.31.0", features = ["bundled", "vtab", "array"] }
+chrono = "0.4.35"
+http = "1.1.0"
+serde_json = "1.0.114"
+serde = { version = "1.0.197", features = ["derive"] }
+thiserror = "1.0"
+
+[features]
+# This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!
+custom-protocol = ["tauri/custom-protocol"]
