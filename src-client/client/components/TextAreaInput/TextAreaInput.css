@@ -7,11 +7,10 @@
   border: 1px grey solid;
   border-radius: 5px;
   color: gray;
-
-  margin-bottom: 10px;
 }
 
 .entry-input {
+
   width: 100%;
   min-width: 50%;
   max-width: 100%;
@@ -22,12 +21,10 @@
   border: none;
   border-radius: 5px;
   padding: 14px;
-  padding-left: 14px;
 
   border-color: lightgray;
 
   resize: none;
   outline: none;
-
 }
 

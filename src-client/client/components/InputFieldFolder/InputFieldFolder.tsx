@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
 import { open } from '@tauri-apps/api/dialog';
-import '../../Global CSS/OneLineInput.css'
+import '../../global CSS/OneLineInput.css'
 
 interface SelectFolderProps {
   savePath : string,

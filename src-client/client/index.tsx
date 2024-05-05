@@ -5,7 +5,7 @@ import NotFoundPage from './pages/NotFoundPage';
 import Root from './routes/Root'
 import SettingsPage from './pages/Settings/SettingsPage.tsx';
 import WritePage from './pages/WritePage/WritePage';
-
+import "./index.css"
 /*
 if (process.env.NODE_ENV === 'production') {
   console.log = () => {}

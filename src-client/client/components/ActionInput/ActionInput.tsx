@@ -3,7 +3,7 @@ import {useJournal} from "../../contexts/JournalContext";
 import { JournalAction } from '../../models/JournalModel.ts';
 import './ActionInput.css'
 import "react-datepicker/dist/react-datepicker.css";
-import "../../Global CSS/OneLineInput.css"
+import "../../global CSS/OneLineInput.css"
 
 export default function ActionInput() {
   let actionKeyRef: NonNullable<RefObject<HTMLInputElement>> = createRef<HTMLInputElement>();
@@ -74,14 +74,13 @@ export default function ActionInput() {
 
   return (
     <div className={'action-input-container'}>
-      <div className={'action-inputs'}>
         <input className={'one-line-input'}
                ref={actionKeyRef}
                placeholder={'Enter action'}
                value={actionDescription}
                onKeyDown={onKeyHandler}
                onChange={e => setActionDescription(e.target.value)} />
-      </div>
+
       {createActions()}
     </div>
   );
