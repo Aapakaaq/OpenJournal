@@ -1,12 +1,9 @@
-import './SubmitJournal.css'
-
+import '../../global CSS/CommonButtons.css'
 
 export function SubmitJournal() {
-
-
   return (
     <div className="container">
-      <button className="submit-button" type={"submit"}>
+      <button className="large-button-left" type={"submit"}>
         Save
       </button>
     </div>

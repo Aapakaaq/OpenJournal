@@ -1,0 +1,13 @@
+.large-button-left, .large-button-right {
+    width: 45%;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.large-button-left  {
+    float: left;
+}
+
+.large-button-right {
+    float: right;
+}

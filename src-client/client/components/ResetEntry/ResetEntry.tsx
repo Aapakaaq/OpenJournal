@@ -1,6 +1,5 @@
 import {useJournal} from "../../contexts/JournalContext";
-import "./ResetEntry.css"
-
+import '../../global CSS/CommonButtons.css'
 export function ResetEntry() {
   const {resetEntry} = useJournal();
 
@@ -11,7 +10,7 @@ export function ResetEntry() {
   }
   return (
     <div className="container">
-      <button className="reset-button" onClick={onClickHandler}>
+      <button className="large-button-right" onClick={onClickHandler}>
         Clear
       </button>
     </div>

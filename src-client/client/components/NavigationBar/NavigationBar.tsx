@@ -1,6 +1,6 @@
 import {NavLink} from 'react-router-dom';
 import './NavigationBar.css'
-import '../../global CSS/disabledText.css'
+import '../../global CSS/DisabledText.css'
 export default function NavigationBar() {
   return (
     <nav className="navigation-bar">
