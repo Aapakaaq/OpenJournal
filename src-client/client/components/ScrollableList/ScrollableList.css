@@ -1,0 +1,18 @@
+.list-container{
+    overflow: auto;
+    height: 25vh;
+}
+
+.list-collection {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.list-item {
+    padding-left: 14px;
+    flex: 1;
+    margin-right: 30px;
+    word-break: break-word;
+    flex-wrap: wrap;
+}

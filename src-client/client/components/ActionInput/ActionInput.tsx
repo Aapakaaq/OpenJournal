@@ -1,9 +1,10 @@
-import { createRef, RefObject, useEffect, useRef, useState } from 'react';
+import { createRef, RefObject, useState } from 'react';
 import {useJournal} from "../../contexts/JournalContext";
 import { JournalAction } from '../../models/JournalModel.ts';
 import './ActionInput.css'
 import "react-datepicker/dist/react-datepicker.css";
 import "../../global CSS/OneLineInput.css"
+import ScrollableList from '../ScrollableList/ScrollableList.tsx';
 
 export default function ActionInput() {
   let actionKeyRef: NonNullable<RefObject<HTMLInputElement>> = createRef<HTMLInputElement>();
@@ -12,33 +13,18 @@ export default function ActionInput() {
   const {journalEntry} = useJournal()
   const [actionDescription, setActionDescription] = useState<string>('');
 
-  // TODO: Refactor and extract
-  // - Too many responsibilities in a single function
-  // - Should not scroll when action is deleted
-  // - Scroll bar should not cover delete button
   function createActions() {
     if (!journalEntry.actions) return null;
-    const actionsRef = useRef(null);
-
-    useEffect(() => {
-      actionsRef.current.scrollTo({
-        top: actionsRef.current.scrollHeight,
-        behavior: 'smooth'
-      });
-    }, [journalEntry.actions]);
-
     return (
-      <div className={"action-collection"} ref={actionsRef}>
-        {Object.entries(journalEntry.actions).map(([_, action], index: number) => (
-            <div className={'action'} key={index}>
-              <div className={'key'}>
-                {action.description}
-              </div>
-              <button onClick={event => deleteAction(event, index)}>x</button>
-            </div>
-          )
+      <ScrollableList
+        items={Object.entries(journalEntry.actions)}
+        renderItem={([_, action], index: number) => (
+          <div key={index}>
+              {action.description}
+          </div>
         )}
-      </div>
+        onDelete={(clickEvent, index) => deleteAction(clickEvent, index)}
+      />
     );
   }
 
