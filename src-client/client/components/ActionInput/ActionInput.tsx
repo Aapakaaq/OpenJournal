@@ -1,7 +1,6 @@
 import { createRef, RefObject, useState } from 'react';
 import {useJournal} from "../../contexts/JournalContext";
 import { JournalAction } from '../../models/JournalModel.ts';
-import './ActionInput.css'
 import "react-datepicker/dist/react-datepicker.css";
 import "../../global CSS/OneLineInput.css"
 import ScrollableList from '../ScrollableList/ScrollableList.tsx';
