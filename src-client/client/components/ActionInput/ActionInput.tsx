@@ -44,7 +44,6 @@ export default function ActionInput() {
       resetAction()
       event.preventDefault();
     }
-
   }
 
   function createJournalAction(){
