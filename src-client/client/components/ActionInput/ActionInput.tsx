@@ -75,7 +75,6 @@ export default function ActionInput() {
     const newValue: JournalAction[] = [...journalEntry.actions];
     newValue.splice(index, 1);
     updateActions(newValue)
-    setDeletedAction(true);
     event.preventDefault();
   }
 
