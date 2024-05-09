@@ -1,8 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
 import "./ScrollableList.css"
 interface IProps<T> {
   items: T[];
-  renderItem: (item: T, index: number) => React.ReactNode;
+  renderItem: (item: T, index: number) => ReactNode;
   // @ts-ignore
   onDelete: (e: MouseEvent<HTMLButtonElement>, index: number) => void;
 }
