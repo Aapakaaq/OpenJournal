@@ -1,4 +1,4 @@
-import { createRef, RefObject, useState } from 'react';
+import { createRef, RefObject, useEffect, useRef, useState } from 'react';
 import {useJournal} from "../../contexts/JournalContext";
 import { JournalAction } from '../../models/JournalModel.ts';
 import './ActionInput.css'
@@ -12,13 +12,25 @@ export default function ActionInput() {
   const {journalEntry} = useJournal()
   const [actionDescription, setActionDescription] = useState<string>('');
 
+  // TODO: Refactor and extract
+  // - Too many responsibilities in a single function
+  // - Should not scroll when action is deleted
+  // - Scroll bar should not cover delete button
   function createActions() {
-    if (!journalEntry.actions) return;
+    if (!journalEntry.actions) return null;
+    const actionsRef = useRef(null);
+
+    useEffect(() => {
+      actionsRef.current.scrollTo({
+        top: actionsRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    }, [journalEntry.actions]);
 
     return (
-      <div className={'actions'}>
+      <div className={"action-collection"} ref={actionsRef}>
         {Object.entries(journalEntry.actions).map(([_, action], index: number) => (
-            <div className={'action'}>
+            <div className={'action'} key={index}>
               <div className={'key'}>
                 {action.description}
               </div>
@@ -27,7 +39,7 @@ export default function ActionInput() {
           )
         )}
       </div>
-    )
+    );
   }
 
   // @ts-ignore
@@ -55,7 +67,6 @@ export default function ActionInput() {
       description: actionDescription,
       completed: false,
     }
-
     return newAction;
   }
 
@@ -64,7 +75,7 @@ export default function ActionInput() {
     const newValue: JournalAction[] = [...journalEntry.actions];
     newValue.splice(index, 1);
     updateActions(newValue)
-
+    setDeletedAction(true);
     event.preventDefault();
   }
 
@@ -80,8 +91,8 @@ export default function ActionInput() {
                value={actionDescription}
                onKeyDown={onKeyHandler}
                onChange={e => setActionDescription(e.target.value)} />
+        {createActions()}
 
-      {createActions()}
     </div>
   );
 }

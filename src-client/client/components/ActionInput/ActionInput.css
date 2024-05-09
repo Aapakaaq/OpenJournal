@@ -2,6 +2,12 @@
   width: 100%;
 }
 
+.action-collection{
+  overflow: auto;
+  height: 25vh;
+
+}
+
 .action {
   display: flex;
   align-items: flex-start;

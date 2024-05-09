@@ -10,3 +10,7 @@ form > * {
 .buttons-container {
   margin-top: 45px;
 }
+.test {
+  max-height: 50%;
+
+}
