@@ -1,10 +1,11 @@
 import React, {ChangeEvent, useState} from "react";
 import "./TagsInput.css"
-import {useJournal} from "../../contexts/JournalContext";
 
-export default function TagsInput() {
-  const {updateTags, journalEntry} = useJournal()
-  let tags: string[] = journalEntry.tags;
+interface  IProps {
+  tags: string[];
+  updateData: (updatedData: string[]) => void;
+}
+export default function TagsInput({tags, updateData}: IProps) {
 
   const [input, setInput] = useState('');
   const [isKeyReleased, setIsKeyReleased] = useState(false);
@@ -12,14 +13,13 @@ export default function TagsInput() {
   const tagSeparationKey: string = ',';
   const placeHolderText: string = 'Enter a tag';
 
-
   function addTag(tag: string){
     if (tags.includes(tag)) return;
 
-    const newValue: string[] = [...tags, tag];
-    console.log(`addTag newValue: ${newValue}`);
+    const updatedTags: string[] = [...tags, tag];
+    updateData(updatedTags);
+    console.log(`addTag newValue: ${updatedTags}`);
     setInput('');
-    updateTags(newValue);
   }
 
   // @ts-ignore
@@ -51,7 +51,7 @@ export default function TagsInput() {
       // @ts-ignore
       setInput(poppedTag);
       setIsKeyReleased(false);
-      updateTags(tagsCopy)
+      updateData(tagsCopy)
     }
   }
 
@@ -81,7 +81,7 @@ export default function TagsInput() {
     const filteredTags: string[] = tags.filter((_, i: number): boolean =>
       i !== index);
 
-    updateTags(filteredTags);
+    updateData(filteredTags);
     event.preventDefault();
   }
 
@@ -101,7 +101,7 @@ export default function TagsInput() {
 
 
   function renderTags() {
-    const values: string[] = journalEntry.tags;
+    const values: string[] = tags;
     if (!values) return;
     return values.map(createTags);
   }

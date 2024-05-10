@@ -1,26 +1,26 @@
 import { createRef, RefObject, useState } from 'react';
-import {useJournal} from "../../contexts/JournalContext";
-import { JournalAction } from '../../models/JournalModel.ts';
 import "react-datepicker/dist/react-datepicker.css";
 import "../../global CSS/OneLineInput.css"
 import ScrollableList from '../ScrollableList/ScrollableList.tsx';
 
-export default function ActionInput() {
+interface IProps {
+  actions: string[];
+  updateData: (updatedData: string[]) => void;
+}
+
+export default function ActionInput({actions, updateData}: IProps) {
   let actionKeyRef: NonNullable<RefObject<HTMLInputElement>> = createRef<HTMLInputElement>();
 
-  const {updateActions} = useJournal();
-  const {journalEntry} = useJournal()
   const [actionDescription, setActionDescription] = useState<string>('');
 
   function createActions() {
-    if (!journalEntry.actions) return null;
+    if (!actions) return null;
+
     return (
       <ScrollableList
-        items={Object.entries(journalEntry.actions)}
-        renderItem={([_, action], index: number) => (
-          <div key={index}>
-              {action.description}
-          </div>
+        items={actions.map((action: string, index: number) => ({ key: index.toString(), value: action }))}
+        renderItem={({ value: action }) => (
+          <div key={action}>{action}</div>
         )}
         onDelete={(clickEvent, index) => deleteAction(clickEvent, index)}
       />
@@ -29,7 +29,6 @@ export default function ActionInput() {
 
   // @ts-ignore
   function onKeyHandler(event: KeyboardEvent<HTMLInputElement>): void {
-    // TODO: Add feedback to user that value is missing
     const trimmedInput: string = event.target.value.trim();
     if (event.key === "Enter" && trimmedInput === '') {
       event.preventDefault();
@@ -38,27 +37,19 @@ export default function ActionInput() {
 
     if (event.key === "Enter") {
       event.preventDefault();
-      const newAction: JournalAction = createJournalAction();
-      const newValue: JournalAction[] = [...journalEntry.actions, newAction];
-      updateActions(newValue);
-      resetAction()
+      const newValue: string[] = [...actions, actionDescription];
+      updateData(newValue);
+      resetAction();
       event.preventDefault();
     }
   }
 
-  function createJournalAction(){
-    const newAction: JournalAction = {
-      description: actionDescription,
-      completed: false,
-    }
-    return newAction;
-  }
 
   // @ts-ignore
   function deleteAction(event: MouseEvent<HTMLButtonElement>, index: number): void {
-    const newValue: JournalAction[] = [...journalEntry.actions];
+    const newValue: string[] = [...actions];
     newValue.splice(index, 1);
-    updateActions(newValue)
+    updateData(newValue);
     event.preventDefault();
   }
 
