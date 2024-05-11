@@ -9,9 +9,13 @@ export function createJournal(content: string, tags: string[], actions: string[]
   }
 }
 
-function createJournalAction(actions: string[]){
-  return actions.map((value: string) => ({
+function createJournalAction(actions: string[]): JournalAction []{
+  const journalActions: JournalAction[] = actions.map((value: string, _) => {
+    return {
       description: value,
       completed: false
-  }));
+    }
+  });
+
+  return journalActions;
 }
