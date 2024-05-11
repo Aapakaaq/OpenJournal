@@ -25,11 +25,17 @@ function useJournal(): JournalContextType {
 
 function JournalProvider({children}: IProps) {
   const [journalEntry, setJournalEntry] = useState<JournalModel>(initialState);
-  const [journalFolder, setjournalFolder] = useState<string>("./journals/");
+  const [journalFolder, setjournalFolder] = useState<string>("./journals");
 
-  // TODO: Refactor
   function createPathFromFolder(path: string): string {
-    const fullPath: string = journalFolder + '/' + path;
+    // Consider setting path to default on empty
+    if (!path || path.trim() === "") {
+      throw new Error("Path parameter cannot be null, undefined, or empty.");
+    }
+
+    const trimmedPath = path.endsWith("/") ? path.slice(0, -1) : path;
+
+    const fullPath: string = `${journalFolder}/${trimmedPath}`;
     return fullPath;
   }
 

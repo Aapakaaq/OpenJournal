@@ -9,9 +9,13 @@ import { invoke } from '@tauri-apps/api/tauri';
 import { StatusCodes } from 'http-status-codes';
 import { getFormattedTimestamp } from '../../utils/FormattedTimestamp.ts';
 import '../../global CSS/CommonButtons.css'
+import { createJournal } from '../../utils/JournalFactory.ts';
+import { JournalModel } from '../../models/JournalModel.ts';
+import { generateRandomStringWithNumbers } from '../../utils/RandomStringGenerator.ts';
 
+// TODO: Store content between page and on shutdown. Tauri-plugin store
 export default function JournalForm() {
-  const {resetEntry, journalEntry, createPathFromFolder} = useJournal();
+  const {createPathFromFolder} = useJournal();
 
   const [actions, setActions] = useState<string[]>([]);
   const [journalText, setJournalText] = useState<string>('');
@@ -19,16 +23,26 @@ export default function JournalForm() {
 
   async function saveJournal(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
     const timestamp: string = getFormattedTimestamp();
-    const fileName: string = timestamp + '.json';
+    const journalEntry: JournalModel = createJournal(journalText, tags, actions, timestamp);
+
+    const suffix: string = generateRandomStringWithNumbers(4);
+    const fileName: string = timestamp + " "+ suffix + '.json';
+    console.log(fileName)
+
     const journalAsJsonString: string = JSON.stringify(journalEntry)
+    const savePath: string = createPathFromFolder(fileName);
+
+    console.log("Saving file at: " + savePath);
     const result: number = await invoke(
       "create_journal",
-      {journalJson: journalAsJsonString, path: createPathFromFolder(fileName)})
+      {journalJson: journalAsJsonString, path: savePath})
+
     // TODO: Error handling
     if (result == StatusCodes.CREATED) {
       console.log(`Journal submitted `);
-      resetEntry();
+      resetAllStates();
     } else {
       console.error(`Journal could not be submitted`);
     }
@@ -50,6 +64,7 @@ export default function JournalForm() {
     setJournalText('');
     setTags([]);
     setActions([]);
+    console.log("Form resat");
   }
 
   // @ts-ignore
