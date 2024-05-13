@@ -40,6 +40,7 @@ fn create_journal(journal_json: &str, path: &str) -> u16 {
 
 fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_store::Builder::default().build())
         .invoke_handler(tauri::generate_handler![greet, create_journal])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
