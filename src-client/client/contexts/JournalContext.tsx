@@ -25,7 +25,7 @@ function useJournal(): JournalContextType {
 function JournalProvider({children}: IProps) {
   const [journalEntry, setJournalEntry] = useState<JournalModel>(initialState);
   // TODO: Should be given during on-boarding
-  const [journalFolder, setjournalFolder] = useState<string>("./journals");
+  const [journalFolder, setjournalFolder] = useState<string>("./");
 
   function createPathFromFolder(path: string): string {
     // Consider setting path to default on empty
