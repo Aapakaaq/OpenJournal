@@ -1,50 +1,34 @@
-import { createRef, RefObject, useEffect, useRef, useState } from 'react';
-import {useJournal} from "../../contexts/JournalContext";
-import { JournalAction } from '../../models/JournalModel.ts';
-import './ActionInput.css'
+import { createRef, RefObject, useState } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
 import "../../global CSS/OneLineInput.css"
+import ScrollableList from '../ScrollableList/ScrollableList.tsx';
 
-export default function ActionInput() {
+interface IProps {
+  actions: string[];
+  updateData: (updatedData: string[]) => void;
+}
+
+export default function ActionInput({actions, updateData}: IProps) {
   let actionKeyRef: NonNullable<RefObject<HTMLInputElement>> = createRef<HTMLInputElement>();
 
-  const {updateActions} = useJournal();
-  const {journalEntry} = useJournal()
   const [actionDescription, setActionDescription] = useState<string>('');
 
-  // TODO: Refactor and extract
-  // - Too many responsibilities in a single function
-  // - Should not scroll when action is deleted
-  // - Scroll bar should not cover delete button
   function createActions() {
-    if (!journalEntry.actions) return null;
-    const actionsRef = useRef(null);
-
-    useEffect(() => {
-      actionsRef.current.scrollTo({
-        top: actionsRef.current.scrollHeight,
-        behavior: 'smooth'
-      });
-    }, [journalEntry.actions]);
+    if (!actions) return null;
 
     return (
-      <div className={"action-collection"} ref={actionsRef}>
-        {Object.entries(journalEntry.actions).map(([_, action], index: number) => (
-            <div className={'action'} key={index}>
-              <div className={'key'}>
-                {action.description}
-              </div>
-              <button onClick={event => deleteAction(event, index)}>x</button>
-            </div>
-          )
+      <ScrollableList
+        items={actions.map((action: string, index: number) => ({ key: index.toString(), value: action }))}
+        renderItem={({ value: action }) => (
+          <div key={action}>{action}</div>
         )}
-      </div>
+        onDelete={(clickEvent, index) => deleteAction(clickEvent, index)}
+      />
     );
   }
 
   // @ts-ignore
   function onKeyHandler(event: KeyboardEvent<HTMLInputElement>): void {
-    // TODO: Add feedback to user that value is missing
     const trimmedInput: string = event.target.value.trim();
     if (event.key === "Enter" && trimmedInput === '') {
       event.preventDefault();
@@ -53,28 +37,19 @@ export default function ActionInput() {
 
     if (event.key === "Enter") {
       event.preventDefault();
-      const newAction: JournalAction = createJournalAction();
-      const newValue: JournalAction[] = [...journalEntry.actions, newAction];
-      updateActions(newValue);
-      resetAction()
+      const newValue: string[] = [...actions, actionDescription];
+      updateData(newValue);
+      resetAction();
       event.preventDefault();
     }
-
   }
 
-  function createJournalAction(){
-    const newAction: JournalAction = {
-      description: actionDescription,
-      completed: false,
-    }
-    return newAction;
-  }
 
   // @ts-ignore
   function deleteAction(event: MouseEvent<HTMLButtonElement>, index: number): void {
-    const newValue: JournalAction[] = [...journalEntry.actions];
+    const newValue: string[] = [...actions];
     newValue.splice(index, 1);
-    updateActions(newValue)
+    updateData(newValue);
     event.preventDefault();
   }
 

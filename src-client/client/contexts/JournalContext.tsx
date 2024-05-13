@@ -1,5 +1,5 @@
 import {createContext, ReactNode, useContext, useState} from 'react';
-import { JournalAction, JournalModel } from '../models/JournalModel';
+import { JournalModel } from '../models/JournalModel';
 import {JournalContextType} from '../types/JournalContextType';
 
 interface IProps {
@@ -7,16 +7,15 @@ interface IProps {
 }
 
 const initialState: JournalModel = {
-  // TODO: SHOULD BE SET ON ONBOARDING. TMP FOR DEVELOPMENT
   content: '',
   actions: [],
   tags: [],
 }
 
-const JournalContext = createContext<JournalContextType | null>(null);
+const journalContext = createContext<JournalContextType | null>(null);
 
 function useJournal(): JournalContextType {
-  const context = useContext(JournalContext);
+  const context = useContext(journalContext);
   if (!context) {
     throw new Error('useJournal must be used within a JournalProvider');
   }
@@ -25,11 +24,18 @@ function useJournal(): JournalContextType {
 
 function JournalProvider({children}: IProps) {
   const [journalEntry, setJournalEntry] = useState<JournalModel>(initialState);
-  const [journalFolder, setjournalFolder] = useState<string>("./journals/");
+  // TODO: Should be given during on-boarding
+  const [journalFolder, setjournalFolder] = useState<string>("./");
 
-  // TODO: Refactor
   function createPathFromFolder(path: string): string {
-    const fullPath: string = journalFolder + '/' + path;
+    // Consider setting path to default on empty
+    if (!path || path.trim() === "") {
+      throw new Error("Path parameter cannot be null, undefined, or empty.");
+    }
+
+    const trimmedPath = path.endsWith("/") ? path.slice(0, -1) : path;
+
+    const fullPath: string = `${journalFolder}/${trimmedPath}`;
     return fullPath;
   }
 
@@ -38,38 +44,17 @@ function JournalProvider({children}: IProps) {
       setjournalFolder(newPath);
     }
   }
-  function updateText(text: string): void {
-    setJournalEntry(prevState => ({
-      ...prevState,
-      content: text
-    }));
-  }
 
-  function updateTags(newTags: string[]): void {
-    setJournalEntry(prevState => ({
-      ...prevState,
-      tags: newTags,
-    }));
-  }
 
   function resetEntry(): void {
     setJournalEntry(initialState);
   }
 
-  // TODO: Fix
-  function updateActions(newActions: JournalAction[]): void {
-    setJournalEntry(prevState => ({
-      ...prevState,
-      actions: newActions
-    }));
-  }
-
-
   return (
-    <JournalContext.Provider
-      value={{journalFolder,createPathFromFolder, updateJournalFolder, journalEntry, updateText, updateTags: updateTags, updateActions, resetEntry}}>
+    <journalContext.Provider
+      value={{journalFolder,createPathFromFolder, updateJournalFolder, journalEntry, resetEntry}}>
       {children}
-    </JournalContext.Provider>
+    </journalContext.Provider>
   );
 }
 

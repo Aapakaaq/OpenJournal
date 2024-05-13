@@ -1,13 +1,15 @@
 import './TextAreaInput.css';
-import {useJournal} from "../../contexts/JournalContext";
 import {ChangeEvent} from 'react';
-export default function TextAreaInput() {
-  const {updateText, journalEntry} = useJournal();
 
+interface IProps {
+  value: string;
+  updateValue: (updatedValue: string) => void;
+}
 
+export default function TextAreaInput({ value, updateValue }: IProps) {
   function handleChange(event: ChangeEvent<HTMLTextAreaElement>) {
     const value: string = event.target.value;
-    updateText(value);
+    updateValue(value);
     event.preventDefault();
   }
 
@@ -17,7 +19,7 @@ export default function TextAreaInput() {
       <textarea className="entry-input"
                 placeholder={'Enter text'}
                 spellCheck='true'
-                value={journalEntry.content}
+                value={value}
                 onChange={handleChange}
       />
     </div>
