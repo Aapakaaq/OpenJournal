@@ -8,12 +8,6 @@ use open_journal::services::file_system::DiskFileSystem;
 use open_journal::services::journal_service::{JournalService, JournalSystemErr};
 
 #[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
-
-
-#[tauri::command]
 fn create_journal(journal_json: &str, path: &str) -> u16 {
     let disk_file_system = DiskFileSystem;
     let service: JournalService<DiskFileSystem> = JournalService::new(disk_file_system);
@@ -43,7 +37,7 @@ fn main() {
     // https://github.com/tauri-apps/plugins-workspace/blob/v2/plugins/store/examples/AppSettingsManager/src-tauri/src/main.rs
     tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::default().build())
-        .invoke_handler(tauri::generate_handler![greet, create_journal])
+        .invoke_handler(tauri::generate_handler![create_journal])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

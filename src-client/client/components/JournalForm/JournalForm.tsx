@@ -3,35 +3,60 @@ import TagsInput from "../TagsInput/TagsInput";
 import ActionInput from "../ActionInput/ActionInput";
 import {SubmitJournal} from "../SubmitJournal/SubmitJournal";
 import {useJournal} from "../../contexts/JournalContext";
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import './JournalForm.css'
 import { invoke } from '@tauri-apps/api/tauri';
 import { StatusCodes } from 'http-status-codes';
 import { getFormattedTimestamp } from '../../utils/FormattedTimestamp.ts';
 import '../../global CSS/CommonButtons.css'
-import { createJournal } from '../../utils/JournalFactory.ts';
-import { JournalModel } from '../../models/JournalModel.ts';
+import { JournalAction, journalMapToModel, JournalModel } from '../../models/JournalModel.ts';
 import { generateRandomStringWithNumbers } from '../../utils/RandomStringGenerator.ts';
+import { Store } from 'tauri-plugin-store-api';
+import { JSONObject } from '../../types/Json.ts';
+const store = new Store('.tempStorage.dat')
 
-// TODO: Store content between page and on shutdown. Tauri-plugin store
+const initialModel: JournalModel = {
+  content: '',
+  tags: [],
+  actions: []
+}
+
+// TODO: Needs major refactor.
 export default function JournalForm() {
   const {createPathFromFolder} = useJournal();
 
-  const [actions, setActions] = useState<string[]>([]);
-  const [journalText, setJournalText] = useState<string>('');
-  const [tags, setTags] = useState<string[]>([]);
+  const [journalModel, setJournalModel] = useState<JournalModel>(initialModel);
+
+  // Loads journal from last session
+  useEffect(()=> {
+    store.get("journal")
+      .then((content) => content as JSONObject)
+      .then((content) => journalMapToModel(content))
+      .then((journal) =>{
+        setJournalModel(journal);
+      })
+  }, [])
+
+  useEffect(() => {
+    // temp store in app data
+    store.set("journal", journalModel)
+    store.save();
+  }, [journalModel])
 
   async function saveJournal(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const timestamp: string = getFormattedTimestamp();
-    const journalEntry: JournalModel = createJournal(journalText, tags, actions, timestamp);
+    setJournalModel(prevState => ({
+      ...prevState,
+      createdAt:timestamp
+    }))
 
     const suffix: string = generateRandomStringWithNumbers(4);
     const fileName: string = timestamp + " "+ suffix + '.json';
     console.log(fileName)
 
-    const journalAsJsonString: string = JSON.stringify(journalEntry)
+    const journalAsJsonString: string = JSON.stringify(journalModel)
     const savePath: string = createPathFromFolder(fileName);
 
     console.log("Saving file at: " + savePath);
@@ -48,22 +73,29 @@ export default function JournalForm() {
     }
   }
 
-  function handleActionUpdate(updatedData: string[]): void {
-    setActions(updatedData);
+  function handleActionUpdate(updatedData: JournalAction[]): void {
+    setJournalModel(prevState => ({
+      ...prevState,
+      actions: updatedData
+    }))
   }
 
   function handleJournalTextUpdate(updatedText: string) : void {
-    setJournalText(updatedText);
+    setJournalModel(prevState => ({
+      ...prevState,
+      content: updatedText
+    }));
   }
 
   function handleTagUpdate(updatedTags: string[]): void {
-    setTags(updatedTags);
+    setJournalModel(prevState => ({
+      ...prevState,
+      tags: updatedTags,
+    }));
   }
 
   function resetAllStates(): void {
-    setJournalText('');
-    setTags([]);
-    setActions([]);
+    setJournalModel(initialModel);
     console.log("Form resat");
   }
 
@@ -75,9 +107,9 @@ export default function JournalForm() {
 
   return (
     <form onSubmit={saveJournal} onReset={() => handleOnReset}>
-      <TextAreaInput value={journalText} updateValue={handleJournalTextUpdate}/>
-      <TagsInput tags={tags} updateData={handleTagUpdate}/>
-      <ActionInput actions={actions} updateData={handleActionUpdate}/>
+      <TextAreaInput value={journalModel.content} updateValue={handleJournalTextUpdate}/>
+      <TagsInput tags={journalModel.tags} updateData={handleTagUpdate}/>
+      <ActionInput actions={journalModel.actions} updateData={handleActionUpdate}/>
       <div className={"buttons-container"}>
         <SubmitJournal />
         <button className="large-button-right" onClick={handleOnReset}>

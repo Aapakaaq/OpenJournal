@@ -2,10 +2,11 @@ import { createRef, RefObject, useState } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
 import "../../global CSS/OneLineInput.css"
 import ScrollableList from '../ScrollableList/ScrollableList.tsx';
+import { JournalAction } from '../../models/JournalModel.ts';
 
 interface IProps {
-  actions: string[];
-  updateData: (updatedData: string[]) => void;
+  actions: JournalAction[];
+  updateData: (updatedData: JournalAction[]) => void;
 }
 
 export default function ActionInput({actions, updateData}: IProps) {
@@ -18,7 +19,8 @@ export default function ActionInput({actions, updateData}: IProps) {
 
     return (
       <ScrollableList
-        items={actions.map((action: string, index: number) => ({ key: index.toString(), value: action }))}
+        items={actions.map((action: JournalAction, index: number) => (
+          { key: index.toString(), value: action.description }))}
         renderItem={({ value: action }) => (
           <div key={action}>{action}</div>
         )}
@@ -37,7 +39,11 @@ export default function ActionInput({actions, updateData}: IProps) {
 
     if (event.key === "Enter") {
       event.preventDefault();
-      const newValue: string[] = [...actions, actionDescription];
+      const newAction: JournalAction = {
+        description: actionDescription,
+        completed: false
+      }
+      const newValue: JournalAction[] = [...actions, newAction];
       updateData(newValue);
       resetAction();
       event.preventDefault();
@@ -47,7 +53,7 @@ export default function ActionInput({actions, updateData}: IProps) {
 
   // @ts-ignore
   function deleteAction(event: MouseEvent<HTMLButtonElement>, index: number): void {
-    const newValue: string[] = [...actions];
+    const newValue: JournalAction[] = [...actions];
     newValue.splice(index, 1);
     updateData(newValue);
     event.preventDefault();
