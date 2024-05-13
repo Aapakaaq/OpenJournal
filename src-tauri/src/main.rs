@@ -39,6 +39,8 @@ fn create_journal(journal_json: &str, path: &str) -> u16 {
 }
 
 fn main() {
+    // TODO: Make store for app settings
+    // https://github.com/tauri-apps/plugins-workspace/blob/v2/plugins/store/examples/AppSettingsManager/src-tauri/src/main.rs
     tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::default().build())
         .invoke_handler(tauri::generate_handler![greet, create_journal])
