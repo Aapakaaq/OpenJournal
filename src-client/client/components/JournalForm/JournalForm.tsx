@@ -13,7 +13,9 @@ import { JournalAction, journalMapToModel, JournalModel } from '../../models/Jou
 import { generateRandomStringWithNumbers } from '../../utils/RandomStringGenerator.ts';
 import { Store } from 'tauri-plugin-store-api';
 import { JSONObject } from '../../types/Json.ts';
-const store = new Store('.tempStorage.dat')
+
+// temp store in app data
+const store: Store = new Store('.tempStorage.dat')
 
 const initialModel: JournalModel = {
   content: '',
@@ -38,7 +40,6 @@ export default function JournalForm() {
   }, [])
 
   useEffect(() => {
-    // temp store in app data
     store.set("journal", journalModel)
     store.save();
   }, [journalModel])
